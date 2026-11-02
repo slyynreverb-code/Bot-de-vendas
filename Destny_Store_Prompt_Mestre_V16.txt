@@ -1,0 +1,1642 @@
+# PROMPT MESTRE — DESTNY STORE V16
+## Bot oficial da Destny Store — Etapa 1: Configuração completa do servidor
+
+Você é um desenvolvedor especialista em Discord API, discord.js, Node.js, TypeScript e arquitetura de bots comerciais para Discord.
+
+Sua tarefa é desenvolver o **bot oficial da Destny Store**, uma loja de contas, produtos e serviços do jogo Slayers 2 (Roblox).
+
+O mesmo bot será utilizado futuramente para o sistema completo de vendas da loja, incluindo containers de produtos, carrinho de compras, tickets, pedidos, atendimento e fidelidade.
+
+**ENTRETANTO, NESTA PRIMEIRA ETAPA, SUA ÚNICA TAREFA É CRIAR E CONFIGURAR A ESTRUTURA DO SERVIDOR DISCORD.**
+
+Todos os demais sistemas serão desenvolvidos posteriormente, quando eu fornecer novas instruções.
+
+Todo o planejamento abaixo já foi aprovado. Não altere nomes, emojis, cores, posições, permissões ou qualquer outra decisão por iniciativa própria.
+
+Quero que você implemente o projeto, não apenas explique como fazê-lo.
+
+---
+
+# 1. REGRAS ABSOLUTAS
+
+**PRIORIDADE MÁXIMA: CRIAR SOMENTE A ESTRUTURA DO SERVIDOR.**
+
+É expressamente proibido nesta etapa:
+
+1. Criar, gerar, procurar, baixar ou adicionar imagens.
+2. Colocar fotos, banners, fundos, GIFs, vídeos ou ilustrações em qualquer lugar.
+3. Criar ou modificar o ícone, banner ou imagem de convite do servidor.
+4. Adicionar imagens aos canais, cargos ou outras configurações.
+5. Criar mensagens de boas-vindas, despedidas ou apresentação.
+6. Enviar mensagens de texto aos canais.
+7. Publicar embeds, painéis, anúncios, regras, descrições comerciais ou mensagens de teste.
+8. Criar conteúdo para catálogo, produtos, termos, perguntas frequentes, avaliações ou atendimento.
+9. Criar sistemas de tickets, formulários ou sistemas de vendas nesta etapa.
+10. Configurar sistemas de pagamento, descontos automáticos ou entrega de produtos.
+11. Configurar bots de terceiros ou integrações externas desnecessárias.
+12. Criar webhooks ou programar os scripts de farm nesta etapa.
+13. Criar canais, cargos ou categorias que não estejam especificados neste documento.
+14. Renomear ou remover elementos do planejamento para deixar o servidor supostamente mais bonito.
+15. Substituir caracteres Unicode estilizados por caracteres comuns.
+16. Adicionar funcionalidades que não foram solicitadas.
+17. Criar containers de produtos nesta etapa.
+18. Implementar carrinho de compras nesta etapa.
+19. Criar sistemas de checkout, estoque, pedidos ou tickets nesta etapa.
+20. Adicionar comandos, interfaces ou processos de vendas antes de receber novas instruções.
+
+Os emojis Unicode que fazem parte dos **nomes dos canais, categorias e cargos** são obrigatórios. Eles são caracteres de texto, não imagens, e devem ser preservados.
+
+**Nenhum canal deve receber uma mensagem durante a montagem.** Mesmo canais como Boas-vindas, Regras, Anúncios, Catálogo e Termos da Loja devem permanecer vazios.
+
+Eu mesmo criarei e adicionarei os conteúdos posteriormente.
+
+Não configure o sistema de boas-vindas, onboarding interativo, perguntas de entrada, painel de tickets ou mensagens de regras.
+
+Não habilite recursos adicionais de apresentação do servidor que exijam criar conteúdo.
+
+O único objetivo imediato é preparar a estrutura, a organização, as permissões e as configurações nativas aprovadas.
+
+---
+
+# 2. FINALIDADE FUTURA DO MESMO BOT
+
+**ATENÇÃO: ESTA SEÇÃO DEFINE O FUTURO DO PROJETO, NÃO AUTORIZA SUA IMPLEMENTAÇÃO AGORA.**
+
+O bot utilizado para configurar o servidor também será o **bot oficial de vendas e gerenciamento comercial da Destny Store**.
+
+Não quero criar um bot separado para cada função.
+
+O mesmo aplicativo e bot Discord deverá ser reaproveitado nas próximas etapas, utilizando a mesma identidade e infraestrutura, com módulos independentes.
+
+## Funcionalidades planejadas para o futuro
+
+### Módulo 1 — Configuração do servidor
+
+**IMPLEMENTAR AGORA.**
+
+Responsável por:
+
+- Criar e organizar categorias.
+- Criar e organizar canais.
+- Criar cargos.
+- Configurar cores e hierarquia.
+- Configurar permissões.
+- Configurar opções nativas do servidor.
+- Validar a estrutura aprovada.
+- Permitir atualizações posteriores da estrutura sem duplicações.
+
+### Módulo 2 — Containers de produtos
+
+**NÃO IMPLEMENTAR AGORA.**
+
+Futuramente, o bot deverá permitir criar e gerenciar containers de produtos para os canais da loja.
+
+Esses containers poderão reunir informações como:
+
+- Nome do produto ou serviço.
+- Descrição.
+- Preço.
+- Opções e variações.
+- Quantidades.
+- Disponibilidade.
+- Formas de selecionar produtos.
+- Integração com o carrinho de compras.
+
+O formato visual, funcionamento, componentes, permissões e comportamento serão definidos posteriormente.
+
+Não escolha um modelo por conta própria.
+
+Não publique nenhum container agora.
+
+### Módulo 3 — Carrinho de compras
+
+**NÃO IMPLEMENTAR AGORA.**
+
+Futuramente, o bot terá um sistema de carrinho para os clientes selecionarem produtos e serviços da Destny Store.
+
+Poderá incluir, conforme instruções futuras:
+
+- Adicionar produtos.
+- Remover produtos.
+- Alterar quantidades.
+- Selecionar variações.
+- Consultar valores.
+- Finalizar pedidos.
+- Integração com atendimento.
+- Integração com pagamentos.
+
+Não implemente nenhum desses recursos nesta etapa.
+
+Não crie comandos de carrinho nem bancos de dados comerciais prematuramente.
+
+### Módulo 4 — Tickets e atendimento
+
+**NÃO IMPLEMENTAR AGORA.**
+
+Futuramente, o bot terá um sistema de tickets para atendimento dos clientes.
+
+Poderá incluir:
+
+- Abertura de tickets.
+- Atendimento de compras.
+- Gerenciamento de pedidos.
+- Acesso restrito aos atendentes autorizados.
+- Encerramento e gerenciamento de tickets.
+- Histórico e registros de atendimento.
+
+Os detalhes serão definidos posteriormente.
+
+Não implemente tickets, botões, formulários ou mensagens agora.
+
+### Módulo 5 — Fidelidade e benefícios
+
+**NÃO IMPLEMENTAR AGORA.**
+
+Futuramente, o bot poderá acompanhar o histórico de compras confirmadas dos clientes e gerenciar automaticamente seus cargos de fidelidade.
+
+O planejamento comercial dos níveis de fidelidade está especificado neste documento.
+
+Nesta etapa, apenas crie os cargos com seus nomes, cores, posições e permissões.
+
+Não implemente controle de compras ou descontos.
+
+### Módulo 6 — Gerenciamento de vendas e pedidos
+
+**NÃO IMPLEMENTAR AGORA.**
+
+Futuramente, o bot poderá administrar pedidos, pagamentos, informações dos produtos, estados das compras e entregas.
+
+Nenhum desses processos está autorizado nesta etapa.
+
+## Regra de arquitetura
+
+Desenvolva o projeto inicial com código modular, organizado e extensível.
+
+O módulo de configuração do servidor deve funcionar independentemente dos futuros sistemas de vendas.
+
+Evite uma arquitetura monolítica que exija reescrever o projeto inteiro quando as funcionalidades comerciais forem adicionadas.
+
+Entretanto:
+
+**Não crie módulos comerciais funcionais, comandos fictícios, telas vazias, containers demonstrativos ou implementações antecipadas.**
+
+Basta preparar uma organização de código que permita adicionar esses módulos no futuro.
+
+Não invente regras comerciais que ainda não foram fornecidas.
+
+Não desenvolva as próximas etapas sem minha autorização.
+
+---
+
+# 3. IDENTIFICAÇÃO DO SERVIDOR
+
+**Nome exato:** Destny Store
+
+**Finalidade:** loja de contas, itens e serviços do jogo Slayers 2, na plataforma Roblox.
+
+**Idioma principal:** Português (Brasil).
+
+**Tipo:** Servidor da Comunidade.
+
+**Versão do planejamento:** V16.
+
+**Quantidade obrigatória:**
+
+- 15 categorias.
+- 47 canais permanentes, sendo 46 dentro das categorias e 1 independente.
+- 26 cargos personalizados.
+- 14 níveis de fidelidade.
+
+Não conte `@everyone` como um dos 26 cargos.
+
+Não conte o cargo técnico do bot como um cargo personalizado da loja.
+
+Se o servidor ainda não existir, utilize exclusivamente mecanismos oficiais e suportados pelo Discord. Caso a API não permita criar o servidor diretamente, configure um servidor existente informado pelo `GUILD_ID`.
+
+Não utilize contas pessoais automatizadas, self-bots, tokens de usuário ou mecanismos não oficiais.
+
+---
+
+# 4. PADRÃO VISUAL OBRIGATÓRIO
+
+## Categorias
+
+Formato:
+
+`emoji • 𝗡𝗢𝗠𝗘`
+
+Exemplo:
+
+`👹 • 𝗙𝗔𝗥𝗠`
+
+Utilize exatamente os caracteres Unicode informados.
+
+## Canais
+
+Formato:
+
+`「emoji」ɴᴏᴍᴇ`
+
+Exemplo:
+
+`「❄️」ʏᴇᴛɪ`
+
+Os caracteres estilizados são intencionais.
+
+Não substitua as fontes estilizadas por letras comuns.
+
+Não modifique o padrão dos colchetes japoneses `「」`.
+
+Não remova os emojis.
+
+## Cargos
+
+Os cargos usam emojis no próprio nome, seguidos do nome normal.
+
+Exemplo:
+
+`👑 Owner`
+
+Não confunda o emoji presente no nome com ícones personalizados de cargo. Nenhum ícone de imagem deve ser adicionado.
+
+---
+
+# 5. ESTRUTURA COMPLETA E DEFINITIVA
+
+Crie exatamente as categorias e canais abaixo.
+
+A ordem é obrigatória, tanto entre categorias quanto dentro de cada categoria.
+
+Todos os canais são do tipo TEXTO, com uma única exceção: o canal `「🔊」ɢᴇʀᴀʟ`, que é de VOZ.
+
+## CANAL INDEPENDENTE — TOPO ABSOLUTO
+
+Este canal deve ficar na primeira posição do servidor, FORA de qualquer categoria.
+
+`「🟢」ꜱᴛᴀᴛᴜꜱ-ᴅᴀ-ʟᴏᴊᴀ`
+
+Tipo: Texto.
+
+Acesso: público para visualização e leitura de histórico.
+
+Publicação por membros comuns: proibida.
+
+Não coloque esse canal dentro de Entrada ou qualquer outra categoria.
+
+## CATEGORIA 01
+
+`🚪 • 𝗘𝗡𝗧𝗥𝗔𝗗𝗔`
+
+Ordem dos canais:
+
+1. `「👋」ʙᴏᴀꜱ-ᴠɪɴᴅᴀꜱ`
+2. `「📜」ʀᴇɢʀᴀꜱ`
+
+Categoria pública, com leitura permitida e publicação proibida para membros comuns.
+
+Não publique regras nem mensagens de boas-vindas.
+
+## CATEGORIA 02
+
+`📢 • 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗖𝗢𝗘𝗦`
+
+Ordem dos canais:
+
+1. `「🔔」ᴀᴛᴜᴀʟɪᴢᴀᴄᴏᴇꜱ`
+2. `「📣」ᴀɴᴜɴᴄɪᴏꜱ`
+3. `「🔗」ᴄᴏɴᴠɪᴛᴇꜱ`
+4. `「📬」ɴᴏᴛɪꜰɪᴄᴀᴄᴏᴇꜱ`
+
+Categoria pública e somente leitura para membros comuns.
+
+## CATEGORIA 03
+
+`🌙 • 𝗖𝗢𝗠𝗨𝗡𝗜𝗗𝗔𝗗𝗘`
+
+Ordem dos canais:
+
+1. `「💭」ᴄʜᴀᴛ`
+2. `「📸」ᴍɪᴅɪᴀ`
+3. `「🎉」ꜱᴏʀᴛᴇɪᴏꜱ`
+4. `「💡」ꜱᴜɢᴇꜱᴛᴏᴇꜱ`
+5. `「🗳️」ᴇɴQᴜᴇᴛᴇꜱ`
+6. `「🔊」ɢᴇʀᴀʟ`
+
+Os primeiros cinco são canais de TEXTO.
+
+O sexto é um canal de VOZ.
+
+Essa categoria é pública e permite conversas dos membros, exceto pelas restrições específicas do canal Enquetes.
+
+Configuração dos canais:
+
+- Chat: modo lento de 5 segundos.
+- Mídia: modo lento desativado.
+- Sorteios: não inventar configurações adicionais.
+- Sugestões: modo lento de 15 segundos.
+- Enquetes: modo lento desativado e permissões especiais detalhadas posteriormente.
+- Geral: canal de voz, sem limite definido de usuários, região automática e qualidade de 64 kbps.
+
+**Atenção:** o nome estilizado `ᴇɴQᴜᴇᴛᴇꜱ` é intencional. Preserve exatamente esse texto.
+
+## CATEGORIA 04
+
+`🛒 • 𝗟𝗢𝗝𝗔`
+
+Ordem dos canais:
+
+1. `「📋」ᴄᴀᴛᴀʟᴏɢᴏ`
+2. `「📖」ᴄᴏᴍᴏ-ᴄᴏᴍᴘʀᴀʀ`
+3. `「📑」ᴛᴇʀᴍᴏꜱ-ᴅᴀ-ʟᴏᴊᴀ`
+4. `「🎁」ᴘʀᴏᴍᴏᴄᴏᴇꜱ`
+5. `「🏅」ʙᴇɴᴇꜰɪᴄɪᴏꜱ`
+
+Categoria pública e somente leitura para membros comuns.
+
+O canal Termos da Loja foi aprovado na V16 e deve aparecer imediatamente depois de Como Comprar.
+
+Não escreva nenhum texto nos canais.
+
+## CATEGORIA 05
+
+`🎫 • 𝗔𝗧𝗘𝗡𝗗𝗜𝗠𝗘𝗡𝗧𝗢`
+
+Ordem dos canais:
+
+1. `「📩」ᴀʙʀɪʀ-ᴛɪᴄᴋᴇᴛ`
+2. `「❓」ᴅᴜᴠɪᴅᴀꜱ-ꜰʀᴇQᴜᴇɴᴛᴇꜱ`
+
+Categoria pública e somente leitura para membros comuns.
+
+Não configure sistemas de tickets, botões, painéis ou formulários nesta etapa.
+
+O canal Abrir Ticket deve ser criado vazio.
+
+## CATEGORIA 06
+
+`✅ • 𝗔𝗩𝗔𝗟𝗜𝗔𝗖𝗢𝗘𝗦`
+
+Ordem dos canais:
+
+1. `「💬」ꜰᴇᴇᴅʙᴀᴄᴋꜱ`
+2. `「📦」ᴇɴᴛʀᴇɢᴀꜱ`
+
+Categoria pública e somente leitura para membros comuns.
+
+## CATEGORIA 07
+
+`👤 • 𝗖𝗢𝗡𝗧𝗔𝗦`
+
+Ordem dos canais:
+
+1. `「🛒」ᴅɪꜱᴘᴏɴɪᴠᴇɪꜱ`
+2. `「🎨」ᴘᴇʀꜱᴏɴᴀʟɪᴢᴀᴠᴇɪꜱ`
+
+Categoria pública e somente leitura para membros comuns.
+
+## CATEGORIA 08
+
+`👹 • 𝗙𝗔𝗥𝗠`
+
+Ordem dos canais:
+
+1. `「⚔️」ʙᴏꜱꜱ`
+2. `「❄️」ʏᴇᴛɪ`
+
+Categoria pública e somente leitura para membros comuns.
+
+## CATEGORIA 09
+
+`🗡️ • 𝗔𝗥𝗠𝗔𝗦`
+
+Ordem dos canais:
+
+1. `「⚔️」ʙᴀꜱᴇ`
+2. `「🔨」ᴅᴀᴍᴀꜱᴄᴜꜱ`
+3. `「🌑」ɴɪɢʜᴛꜰᴀʟʟ`
+4. `「🌅」ꜰɪʀꜱᴛʟɪɢʜᴛ`
+
+Categoria pública e somente leitura para membros comuns.
+
+## CATEGORIA 10
+
+`🎭 • 𝗔𝗖𝗘𝗦𝗦𝗢𝗥𝗜𝗢𝗦`
+
+Ordem dos canais:
+
+1. `「🎭」ʙᴀꜱᴇ`
+2. `「🌑」ɴɪɢʜᴛꜰᴀʟʟ`
+3. `「🌅」ꜰɪʀꜱᴛʟɪɢʜᴛ`
+
+Categoria pública e somente leitura para membros comuns.
+
+Não adicione canal Damascus aos acessórios.
+
+## CATEGORIA 11
+
+`📈 • 𝗫𝗣`
+
+Ordem dos canais:
+
+1. `「🥋」ᴍᴀᴇꜱᴛʀɪᴀ`
+2. `「📊」ʟᴇᴠᴇʟ`
+
+Categoria pública e somente leitura para membros comuns.
+
+## CATEGORIA 12
+
+`💎 • 𝗠𝗔𝗧𝗘𝗥𝗜𝗔𝗜𝗦`
+
+Ordem dos canais:
+
+1. `「💠」ᴏʀᴇꜱ`
+2. `「💰」ᴍᴏɴᴇʏ`
+3. `「✨」ᴍɪᴛɪᴄᴏꜱ`
+4. `「🔧」ʀᴇꜰɪɴᴇᴍᴇɴᴛ`
+
+Categoria pública e somente leitura para membros comuns.
+
+## CATEGORIA 13
+
+`🔒 • 𝗘𝗤𝗨𝗜𝗣𝗘`
+
+Ordem dos canais:
+
+1. `「📢」ᴀᴠɪꜱᴏꜱ-ꜱᴛᴀꜰꜰ`
+2. `「💬」ᴄʜᴀᴛ-ꜱᴛᴀꜰꜰ`
+3. `「📋」ᴘᴇᴅɪᴅᴏꜱ`
+4. `「🤖」ᴄᴏᴍᴀɴᴅᴏꜱ`
+
+**CATEGORIA PRIVADA.**
+
+Somente os cargos autorizados da equipe podem visualizar ou utilizar.
+
+Membros comuns, clientes e demais cargos públicos não devem conseguir visualizar essa categoria.
+
+## CATEGORIA 14
+
+`📁 • 𝗥𝗘𝗚𝗜𝗦𝗧𝗥𝗢𝗦`
+
+Ordem dos canais:
+
+1. `「🎫」ʟᴏɢꜱ-ᴛɪᴄᴋᴇᴛꜱ`
+2. `「🛡️」ʟᴏɢꜱ-ᴍᴏᴅᴇʀᴀᴄᴀᴏ`
+3. `「📜」ʟᴏɢꜱ-ꜱᴇʀᴠɪᴅᴏʀ`
+
+**CATEGORIA PRIVADA.**
+
+Não configure um sistema de logs nem publique nada nesta etapa. Apenas crie os canais com as permissões definidas.
+
+## CATEGORIA 15 — ÚLTIMA CATEGORIA
+
+`📡 • 𝗠𝗢𝗡𝗜𝗧𝗢𝗥𝗔𝗠𝗘𝗡𝗧𝗢`
+
+ÚNICO canal:
+
+`「📈」ᴘʀᴏɢʀᴇꜱꜱᴏ-ᴅᴀꜱ-ᴄᴏɴᴛᴀꜱ`
+
+**CATEGORIA PRIVADA.**
+
+Deve ficar na ÚLTIMA posição de todas as categorias.
+
+Essa categoria será utilizada futuramente para receber logs de um webhook de scripts do Slayers 2.
+
+Objetivo futuro: acompanhar a evolução de contas dos clientes sem precisar entrar no Roblox.
+
+Os futuros registros poderão informar Level, Maestria, Money, Ores, progresso de farm e outros dados de evolução, dependendo das informações fornecidas pelo script.
+
+Entretanto, NESTA ETAPA:
+
+- Não crie webhook.
+- Não programe scripts do Roblox.
+- Não configure endpoints externos.
+- Não envie registros fictícios.
+- Não crie mensagens de teste.
+- Não adicione um segundo canal.
+- Não crie um cargo de Monitoramento.
+
+Crie somente a categoria e seu único canal.
+
+---
+
+# 6. CARGOS — HIERARQUIA E CORES EXATAS
+
+Crie os seguintes 26 cargos, exatamente nesta ordem hierárquica, do mais alto para o mais baixo.
+
+A ordem é parte obrigatória do planejamento.
+
+| Posição | Nome exato | Cor HEX |
+|---|---|---|
+| 1 | 👑 Owner | #FF334C |
+| 2 | ☁️ Cofundador | #E0263E |
+| 3 | 🩸 Administrador | #BA2136 |
+| 4 | 🛡️ Moderador | #B9BEC8 |
+| 5 | 🎫 Atendente | #E0E0E0 |
+| 6 | 👑 Cliente VIP | #E83B58 |
+| 7 | 💎 Diamante II | #819DF7 |
+| 8 | 💎 Diamante I | #819DF7 |
+| 9 | 💠 Platina II | #73C9D1 |
+| 10 | 💠 Platina I | #73C9D1 |
+| 11 | 🥇 Ouro III | #E2B846 |
+| 12 | 🥇 Ouro II | #E2B846 |
+| 13 | 🥇 Ouro I | #E2B846 |
+| 14 | 🥈 Prata III | #AAB4C3 |
+| 15 | 🥈 Prata II | #AAB4C3 |
+| 16 | 🥈 Prata I | #AAB4C3 |
+| 17 | 🥉 Bronze III | #B77B4A |
+| 18 | 🥉 Bronze II | #B77B4A |
+| 19 | 🥉 Bronze I | #B77B4A |
+| 20 | ✅ Cliente | #9AA4B2 |
+| 21 | 🤝 Parceiro | #C99B72 |
+| 22 | 💜 Booster | #B98CEF |
+| 23 | 👤 Membro | #848A94 |
+| 24 | 🎁 Promoções | #C34455 |
+| 25 | 🎉 Sorteios | #DA7580 |
+| 26 | 📢 Atualizações | #9A6B75 |
+
+Não altere a posição do cargo Parceiro, Booster ou dos cargos de notificação.
+
+Não crie cargos adicionais para Bronze, Prata, Ouro, Diamante ou Platina além dos listados.
+
+Não atribua cargos automaticamente aos usuários nesta etapa.
+
+O usuário proprietário do servidor continuará sendo o proprietário real, independentemente do cargo Owner.
+
+O bot deve respeitar as regras de hierarquia da API do Discord.
+
+---
+
+# 7. EXIBIÇÃO SEPARADA DOS CARGOS
+
+Configure a opção nativa de exibir integrantes de determinado cargo separadamente na lista de membros.
+
+Na API, utilize a configuração equivalente a `hoist`.
+
+## EXIBIÇÃO SEPARADA ATIVADA
+
+Ativar para EXATAMENTE estes 21 cargos:
+
+1. 👑 Owner
+2. ☁️ Cofundador
+3. 🩸 Administrador
+4. 🛡️ Moderador
+5. 🎫 Atendente
+6. 👑 Cliente VIP
+7. 💎 Diamante II
+8. 💎 Diamante I
+9. 💠 Platina II
+10. 💠 Platina I
+11. 🥇 Ouro III
+12. 🥇 Ouro II
+13. 🥇 Ouro I
+14. 🥈 Prata III
+15. 🥈 Prata II
+16. 🥈 Prata I
+17. 🥉 Bronze III
+18. 🥉 Bronze II
+19. 🥉 Bronze I
+20. ✅ Cliente
+21. 🤝 Parceiro
+
+## EXIBIÇÃO SEPARADA DESATIVADA
+
+Desativar para EXATAMENTE estes cinco cargos:
+
+1. 💜 Booster
+2. 👤 Membro
+3. 🎁 Promoções
+4. 🎉 Sorteios
+5. 📢 Atualizações
+
+Não altere a hierarquia para tentar modificar a aparência dos grupos.
+
+Não torne os cargos livremente mencionáveis por todos sem que isso tenha sido autorizado.
+
+---
+
+# 8. PROGRAMA DE FIDELIDADE
+
+Os 14 cargos de fidelidade representam o valor acumulado em compras confirmadas na Destny Store.
+
+Os valores e descontos aprovados são:
+
+| Cargo | Compras acumuladas | Desconto |
+|---|---:|---:|
+| 🥉 Bronze I | R$ 25 | 2% |
+| 🥉 Bronze II | R$ 50 | 3% |
+| 🥉 Bronze III | R$ 75 | 4% |
+| 🥈 Prata I | R$ 100 | 5% |
+| 🥈 Prata II | R$ 125 | 6% |
+| 🥈 Prata III | R$ 150 | 7% |
+| 🥇 Ouro I | R$ 175 | 8% |
+| 🥇 Ouro II | R$ 200 | 9% |
+| 🥇 Ouro III | R$ 250 | 10% |
+| 💠 Platina I | R$ 350 | 11% |
+| 💠 Platina II | R$ 500 | 12% |
+| 💎 Diamante I | R$ 650 | 13% |
+| 💎 Diamante II | R$ 800 | 14% |
+| 👑 Cliente VIP | R$ 1.000 | 15% |
+
+Regras comerciais já aprovadas:
+
+- Toda compra paga e confirmada conta para o valor acumulado.
+- Os descontos são válidos exclusivamente para SERVIÇOS.
+- Descontos não são cumulativos entre si.
+- O cargo Cliente VIP também possui prioridade de atendimento e benefícios especiais, como presentes.
+- A progressão não deve zerar entre compras.
+
+**ATENÇÃO: estes dados são somente a especificação comercial dos cargos.**
+
+Não programe sistema de pagamentos.
+
+Não programe cálculo de compras.
+
+Não programe atribuição automática dos cargos.
+
+Não publique essa tabela no Discord.
+
+Apenas crie os 14 cargos corretamente e preserve os dados comerciais na configuração ou documentação interna do projeto, para uma implementação futura.
+
+---
+
+# 9. PERMISSÕES GERAIS DE @everyone
+
+O planejamento original utiliza as seguintes permissões-base para o servidor.
+
+Permitir:
+
+- Ver canais (`ViewChannel`).
+- Enviar mensagens (`SendMessages`).
+- Ler histórico de mensagens (`ReadMessageHistory`).
+- Adicionar reações (`AddReactions`).
+- Anexar arquivos (`AttachFiles`).
+- Conectar-se a canais de voz (`Connect`).
+- Falar em canais de voz (`Speak`).
+- Transmitir ou compartilhar tela (`Stream`).
+- Utilizar vídeo (`Video`).
+- Utilizar detecção de voz (`UseVAD`).
+- Utilizar comandos de aplicativos (`UseApplicationCommands`).
+
+Não conceda permissões administrativas adicionais a `@everyone`.
+
+**IMPORTANTE:** a permissão global de enviar mensagens NÃO significa que os membros possam escrever em todos os canais.
+
+É obrigatório configurar as permissões específicas das categorias e canais.
+
+Os membros comuns devem:
+
+- Ler e visualizar os canais públicos de informações e produtos.
+- Conversar na categoria Comunidade, exceto no canal Enquetes.
+- Não enviar mensagens nas categorias comerciais.
+- Não visualizar categorias privadas.
+
+Implemente as sobrescritas de permissão corretamente, sem depender apenas da configuração global de `@everyone`.
+
+Não substitua a política-base por uma política completamente diferente.
+
+---
+
+# 10. PERMISSÕES GERAIS DOS CARGOS ADMINISTRATIVOS
+
+## 👑 Owner
+
+Permissão:
+
+- Administrador (`Administrator`).
+
+O cargo deve possuir controle administrativo completo.
+
+Não precisa duplicar manualmente todas as permissões que já são abrangidas por Administrador.
+
+## ☁️ Cofundador
+
+Permissão:
+
+- Administrador (`Administrator`).
+
+Também contempla as capacidades de:
+
+- Gerenciar mensagens.
+- Gerenciar tópicos.
+- Expulsar membros.
+- Banir membros.
+- Aplicar timeout.
+- Silenciar membros.
+- Ensurdecer membros.
+- Mover membros de canais de voz.
+
+Como possui Administrador, as capacidades acima já estão incluídas.
+
+## 🩸 Administrador
+
+**NÃO CONCEDER A PERMISSÃO `Administrator`.**
+
+Permissões aprovadas:
+
+- Gerenciar canais (`ManageChannels`).
+- Visualizar registro de auditoria (`ViewAuditLog`).
+- Gerenciar mensagens (`ManageMessages`).
+- Gerenciar tópicos (`ManageThreads`).
+- Expulsar membros (`KickMembers`).
+- Banir membros (`BanMembers`).
+- Aplicar timeout (`ModerateMembers`).
+- Gerenciar apelidos (`ManageNicknames`).
+- Silenciar membros em voz (`MuteMembers`).
+- Ensurdecer membros (`DeafenMembers`).
+- Mover membros (`MoveMembers`).
+
+Não acrescente `ManageRoles` ou `Administrator` por conveniência.
+
+## 🛡️ Moderador
+
+Permissões aprovadas:
+
+- Gerenciar mensagens (`ManageMessages`).
+- Gerenciar tópicos (`ManageThreads`).
+- Aplicar timeout (`ModerateMembers`).
+- Silenciar membros (`MuteMembers`).
+- Ensurdecer membros (`DeafenMembers`).
+- Mover membros (`MoveMembers`).
+
+Não conceda as permissões de expulsar ou banir membros, porque não fazem parte das permissões aprovadas para esse cargo.
+
+## 🎫 Atendente
+
+Nenhuma permissão administrativa global adicional.
+
+Suas permissões extras devem ser dadas especificamente nas categorias autorizadas.
+
+## OUTROS 21 CARGOS
+
+Todos os 14 cargos de fidelidade, os quatro cargos de membros e os três cargos de notificações:
+
+- Não recebem permissões administrativas extras.
+- Herdam o funcionamento-base das categorias.
+- Não podem acessar as categorias privadas sem autorização específica.
+
+Cargos de notificação não devem conceder privilégios especiais.
+
+---
+
+# 11. MATRIZ DE PERMISSÕES POR CATEGORIA
+
+Implemente a matriz abaixo literalmente.
+
+Legenda:
+
+- **LEITURA:** visualizar, ler histórico e reagir conforme permissões-base; não enviar mensagens.
+- **PUBLICAR:** visualizar, ler e enviar mensagens, conforme permissões-base.
+- **OCULTO:** não visualizar a categoria.
+- **HERDAR:** manter a permissão-base definida para aquela categoria, sem criar um novo privilégio.
+- **ADMIN:** acesso efetivo de Administrador, respeitando o funcionamento nativo do Discord.
+
+## BASE — @everyone
+
+| Categoria | Acesso |
+|---|---|
+| Entrada | LEITURA |
+| Informações | LEITURA |
+| Comunidade | PUBLICAR |
+| Loja | LEITURA |
+| Atendimento | LEITURA |
+| Avaliações | LEITURA |
+| Contas | LEITURA |
+| Farm | LEITURA |
+| Armas | LEITURA |
+| Acessórios | LEITURA |
+| XP | LEITURA |
+| Materiais | LEITURA |
+| Equipe | OCULTO |
+| Registros | OCULTO |
+| Monitoramento | OCULTO |
+
+## 👑 Owner
+
+Permissão global Administrador.
+
+Acesso efetivo completo às categorias.
+
+## ☁️ Cofundador
+
+Permissão global Administrador.
+
+Acesso efetivo completo às categorias.
+
+Na organização planejada, possui acesso para publicação em:
+
+- Informações.
+- Comunidade.
+- Loja.
+- Atendimento.
+- Avaliações.
+- Contas.
+- Farm.
+- Armas.
+- Acessórios.
+- XP.
+- Materiais.
+- Equipe.
+- Registros.
+- Monitoramento.
+
+Entrada mantém sua configuração-base no planejamento; a permissão Administrador continua tendo precedência técnica.
+
+## 🩸 Administrador
+
+Acesso para PUBLICAR em:
+
+- Informações.
+- Comunidade.
+- Loja.
+- Atendimento.
+- Avaliações.
+- Contas.
+- Farm.
+- Armas.
+- Acessórios.
+- XP.
+- Materiais.
+- Equipe.
+- Registros.
+- Monitoramento.
+
+Entrada: HERDAR a configuração-base.
+
+Não conceder o bit global Administrador.
+
+## 🛡️ Moderador
+
+Acesso para PUBLICAR em:
+
+- Comunidade.
+- Atendimento.
+- Equipe.
+
+Acesso somente de LEITURA em:
+
+- Registros.
+
+Acesso OCULTO em:
+
+- Monitoramento.
+
+Todas as demais categorias: HERDAR configuração-base.
+
+## 🎫 Atendente
+
+Acesso para PUBLICAR em:
+
+- Loja.
+- Atendimento.
+- Avaliações.
+- Contas.
+- Farm.
+- Armas.
+- Acessórios.
+- XP.
+- Materiais.
+- Equipe.
+
+Todas as demais categorias públicas: HERDAR configuração-base.
+
+Acesso OCULTO em:
+
+- Registros.
+
+Acesso somente de LEITURA em:
+
+- Monitoramento.
+
+## 21 CARGOS RESTANTES
+
+Herdam o acesso-base de `@everyone`, sem privilégios adicionais.
+
+## STATUS DA LOJA
+
+O canal independente:
+
+`「🟢」ꜱᴛᴀᴛᴜꜱ-ᴅᴀ-ʟᴏᴊᴀ`
+
+Deve ser público para visualização, com histórico acessível e envio de mensagens proibido para membros comuns.
+
+Não utilize uma categoria-pai para esse canal.
+
+---
+
+# 12. PERMISSÕES ESPECIAIS — ENQUETES
+
+Canal:
+
+`「🗳️」ᴇɴQᴜᴇᴛᴇꜱ`
+
+Categoria:
+
+`🌙 • 𝗖𝗢𝗠𝗨𝗡𝗜𝗗𝗔𝗗𝗘`
+
+Esse canal possui permissões próprias, diferentes da categoria Comunidade.
+
+## PODEM CRIAR ENQUETES E PUBLICAR
+
+Somente:
+
+1. 👑 Owner.
+2. ☁️ Cofundador.
+3. 🩸 Administrador.
+
+## DEMAIS MEMBROS
+
+Podem:
+
+- Visualizar o canal.
+- Ler o histórico.
+- Votar em enquetes existentes.
+- Adicionar reações permitidas.
+
+Não podem:
+
+- Enviar mensagens.
+- Criar enquetes.
+- Criar tópicos.
+- Publicar conteúdo.
+
+Isso também se aplica aos cargos Moderador e Atendente: eles não recebem autorização para publicar enquetes apenas por serem membros da equipe.
+
+Utilize as permissões nativas adequadas, incluindo `SendMessages`, `SendPolls` e permissões de criação de tópicos quando disponíveis.
+
+Configure corretamente as permissões individuais do canal, sem modificar toda a categoria Comunidade.
+
+O canal é **público para leitura e votação**, mas **restrito para publicação**.
+
+Não crie nenhuma enquete de exemplo.
+
+---
+
+# 13. PERMISSÕES ESPECIAIS — MONITORAMENTO
+
+Categoria:
+
+`📡 • 𝗠𝗢𝗡𝗜𝗧𝗢𝗥𝗔𝗠𝗘𝗡𝗧𝗢`
+
+Canal:
+
+`「📈」ᴘʀᴏɢʀᴇꜱꜱᴏ-ᴅᴀꜱ-ᴄᴏɴᴛᴀꜱ`
+
+Permissões:
+
+| Cargo | Permissão |
+|---|---|
+| 👑 Owner | Acesso completo |
+| ☁️ Cofundador | Acesso completo |
+| 🩸 Administrador | Visualizar e publicar |
+| 🛡️ Moderador | Sem acesso |
+| 🎫 Atendente | Somente leitura |
+| Demais cargos | Sem acesso |
+| @everyone | Sem acesso |
+
+O webhook futuro poderá enviar logs ao canal quando for configurado, mas não deve ser criado agora.
+
+Não publique senhas de contas, cookies, tokens, credenciais ou outros dados sensíveis nos registros.
+
+Não conceda acesso público ao Monitoramento.
+
+---
+
+# 14. CONFIGURAÇÕES NATIVAS DO SERVIDOR
+
+Configure as seguintes opções usando a API oficial do Discord, quando disponíveis.
+
+## Servidor da Comunidade
+
+**Ativado.**
+
+Utilizar:
+
+- Nível de verificação BAIXO.
+- Exigência de e-mail verificado para participação, conforme funcionamento do Discord.
+- Filtro de mídia explícita ativado para TODOS os membros.
+
+Canais já aprovados para os requisitos da Comunidade:
+
+**Canal de regras:**
+
+`「📜」ʀᴇɢʀᴀꜱ`
+
+**Canal de atualizações para administradores/moderadores:**
+
+`「📢」ᴀᴠɪꜱᴏꜱ-ꜱᴛᴀꜰꜰ`
+
+Não crie novos canais para isso.
+
+Não coloque mensagens iniciais nesses canais.
+
+## Idioma
+
+Português do Brasil:
+
+`pt-BR`
+
+Aplicar como idioma principal/preferencial do servidor, conforme suporte da API.
+
+## Notificações padrão
+
+Somente menções.
+
+Equivalente ao modo:
+
+`ONLY_MENTIONS`
+
+Não configurar todas as mensagens como padrão.
+
+## Nível de verificação
+
+BAIXO.
+
+Equivalente a:
+
+`LOW`
+
+Não selecionar `NONE`.
+
+## Filtro de mídia explícita
+
+Todos os membros.
+
+Equivalente a:
+
+`ALL_MEMBERS`
+
+## Recursos de apresentação
+
+Não criar ou configurar:
+
+- Tela de boas-vindas.
+- Mensagens de boas-vindas.
+- Onboarding interativo.
+- Perguntas de entrada.
+- Regras de entrada com conteúdo inventado.
+- Painéis de apresentação.
+- Conteúdo visual.
+
+Se a ativação de Comunidade exigir alguma configuração de conteúdo que ainda não foi fornecida, não invente esse conteúdo. Configure tudo que for possível e identifique a limitação técnica no relatório local.
+
+---
+
+# 15. PROTEÇÃO E AUTOMOD
+
+O planejamento aprovado inclui:
+
+1. Filtro de mensagens de spam.
+2. Bloqueio de spam de menções.
+3. Filtro de links e palavras-chave proibidas.
+4. Proteção contra invasões/raids.
+5. Alertas de segurança para a equipe.
+
+## Filtro de spam
+
+Ativar a proteção nativa de spam do Discord, se disponível pela API.
+
+Utilizar os tipos oficiais de regras do AutoMod, quando aplicáveis.
+
+Não criar um sistema próprio desnecessário.
+
+## Spam de menções
+
+Limite aprovado:
+
+**5 menções por mensagem.**
+
+Bloquear mensagens que ultrapassem esse limite, usando o AutoMod nativo.
+
+Utilizar a proteção contra raids de menções, quando suportada pela API.
+
+## Links e palavras-chave
+
+A proteção foi aprovada, mas ainda NÃO foi fornecida uma lista específica de palavras proibidas ou domínios bloqueados.
+
+Não invente uma lista arbitrária de palavras.
+
+Não bloqueie indiscriminadamente todos os links, pois isso poderia interferir no funcionamento futuro da loja.
+
+Implemente os filtros nativos que possam ser configurados com segurança e deixe preparada, em arquivo local de configuração, a possibilidade de adicionar palavras e domínios depois.
+
+Se uma regra exigir dados ainda não fornecidos, registre-a como pendente de parametrização. Não declare que está ativa se não estiver.
+
+## Proteção contra raids
+
+Ativar as proteções nativas que a API oficial disponibilizar.
+
+Não criar sistemas externos de proteção.
+
+Não executar ações drásticas, como expulsões em massa, banimentos automáticos personalizados ou restrições permanentes, sem definição expressa.
+
+## Alertas de segurança
+
+Utilizar como destino de alertas, quando tecnicamente compatível:
+
+`「📢」ᴀᴠɪꜱᴏꜱ-ꜱᴛᴀꜰꜰ`
+
+Não criar um canal adicional.
+
+Configurar o recurso nativo, mas não enviar alertas fictícios ou mensagens de teste.
+
+Se algum recurso existir somente no painel do Discord, informar isso no relatório.
+
+---
+
+# 16. MODOS LENTOS
+
+Aplicar EXATAMENTE:
+
+| Canal | Modo lento |
+|---|---|
+| 「💭」ᴄʜᴀᴛ | 5 segundos |
+| 「📸」ᴍɪᴅɪᴀ | 0 segundos |
+| 「💡」ꜱᴜɢᴇꜱᴛᴏᴇꜱ | 15 segundos |
+| 「🗳️」ᴇɴQᴜᴇᴛᴇꜱ | 0 segundos |
+
+Não inventar modo lento para outros canais.
+
+---
+
+# 17. CONFIGURAÇÃO DO CANAL DE VOZ
+
+Canal:
+
+`「🔊」ɢᴇʀᴀʟ`
+
+Categoria:
+
+`🌙 • 𝗖𝗢𝗠𝗨𝗡𝗜𝗗𝗔𝗗𝗘`
+
+Configurações obrigatórias:
+
+- Tipo: VOZ.
+- Limite de usuários: sem limite definido.
+- Região de voz: automática.
+- Taxa de bits: 64 kbps.
+- Acesso público, conforme permissões-base de Comunidade.
+- Permitir conectar, falar, transmitir, utilizar vídeo e detecção de voz conforme permissões aprovadas.
+
+Não criar outro canal de voz.
+
+Não criar canais temporários.
+
+Não adicionar sistemas de música.
+
+---
+
+# 18. CONFIGURAÇÕES DOS CANAIS COMERCIAIS
+
+As categorias abaixo são destinadas à apresentação futura dos produtos e serviços da loja:
+
+- Loja.
+- Contas.
+- Farm.
+- Armas.
+- Acessórios.
+- XP.
+- Materiais.
+
+Os membros comuns podem visualizar e consultar os canais, mas não enviar mensagens.
+
+Os cargos administrativos e Atendente seguem suas permissões específicas.
+
+Não configure tópicos de canal com descrições comerciais inventadas.
+
+Não publique imagens de produtos.
+
+Não adicione preços nos canais.
+
+Não escreva descrições dos serviços.
+
+Não crie produtos automaticamente.
+
+Os canais devem ser criados VAZIOS.
+
+---
+
+# 19. PRIVACIDADE DAS CATEGORIAS ADMINISTRATIVAS
+
+Existem três categorias privadas:
+
+1. `🔒 • 𝗘𝗤𝗨𝗜𝗣𝗘`
+2. `📁 • 𝗥𝗘𝗚𝗜𝗦𝗧𝗥𝗢𝗦`
+3. `📡 • 𝗠𝗢𝗡𝗜𝗧𝗢𝗥𝗔𝗠𝗘𝗡𝗧𝗢`
+
+Regras:
+
+- Equipe: acesso autorizado para Owner, Cofundador, Administrador, Moderador e Atendente.
+- Registros: Owner, Cofundador e Administrador podem publicar; Moderador pode somente ler; Atendente não pode acessar.
+- Monitoramento: Owner, Cofundador e Administrador podem publicar; Atendente pode somente ler; Moderador não pode acessar.
+- Membros comuns e demais cargos públicos não podem visualizar nenhuma dessas três categorias.
+
+Não confundir a categoria Registros com a categoria Monitoramento.
+
+Não mover Monitoramento para cima.
+
+A ordem final deve ser:
+
+13. Equipe.
+14. Registros.
+15. Monitoramento.
+
+---
+
+# 20. REQUISITOS DE IMPLEMENTAÇÃO DO BOT
+
+Desenvolva o projeto de forma profissional e segura.
+
+## Tecnologia
+
+Preferência por:
+
+- Node.js.
+- TypeScript.
+- Versão estável e compatível do discord.js.
+- Discord API oficial.
+- Variáveis de ambiente para credenciais.
+
+Utilize a versão atual e suportada das bibliotecas, verificando sua documentação.
+
+## Autenticação
+
+Configurações por ambiente:
+
+- `DISCORD_TOKEN`
+- `GUILD_ID`
+
+Nunca coloque o token diretamente no código.
+
+Nunca exponha o token em logs.
+
+Utilize permissões e escopos oficiais do Discord.
+
+## Arquitetura preparada para expansão
+
+Este projeto não é um bot temporário de configuração.
+
+Ele será mantido como o **bot oficial da Destny Store** e receberá os futuros sistemas de vendas.
+
+Portanto:
+
+- Organize a base de código em módulos independentes.
+- Isole a lógica de montagem e configuração do servidor.
+- Separe configurações de implementação.
+- Evite dependências circulares.
+- Evite comandos administrativos espalhados pelo projeto.
+- Prepare uma organização que possa receber módulos comerciais posteriormente.
+- Permita que novos recursos sejam adicionados sem recriar a aplicação Discord.
+- Preserve o uso do mesmo bot e token nas próximas etapas.
+- Restrinja os comandos de configuração do servidor aos operadores autorizados.
+
+**Não implemente agora os módulos de produtos, carrinho, tickets, pagamentos, pedidos ou fidelidade automática.**
+
+Não é necessário criar arquivos vazios para todos os sistemas futuros. A arquitetura deve apenas permitir sua expansão.
+
+Nenhuma funcionalidade comercial deve ser executada, registrada como comando ou exibida no Discord nesta fase.
+
+## Configuração centralizada
+
+Crie um arquivo de configuração estruturado, por exemplo:
+
+`destny-store.config.ts`
+
+Ele deve conter:
+
+- Nome do servidor.
+- Categorias.
+- Canais.
+- Tipos de canais.
+- Posições.
+- Cargos.
+- Cores.
+- Hierarquia.
+- Opções de exibição.
+- Permissões.
+- Sobrescritas de permissões.
+- Configurações de segurança.
+- Modos lentos.
+- Configurações de voz.
+- Dados de referência do programa de fidelidade.
+
+Os nomes de canais e categorias devem ser tratados como strings Unicode exatas.
+
+## Execução
+
+Implemente um sistema de configuração do servidor que possa ser executado novamente sem causar duplicações.
+
+Requisitos:
+
+1. Identificar elementos existentes.
+2. Criar elementos ausentes.
+3. Atualizar somente configurações aprovadas.
+4. Posicionar categorias e canais na ordem correta.
+5. Posicionar cargos na hierarquia correta.
+6. Configurar as permissões.
+7. Aplicar as configurações do servidor.
+8. Verificar o resultado real por meio da API.
+9. Informar erros de execução.
+10. Não destruir conteúdo preexistente desnecessariamente.
+
+Não utilize a exclusão em massa e recriação como estratégia de atualização.
+
+Não exclua canais, cargos ou categorias que não tenham sido explicitamente autorizados para exclusão.
+
+Em caso de conflito, privilegie a preservação dos dados e informe a situação.
+
+## Simulação
+
+Crie um modo de simulação local (`dry-run`) que mostre no terminal o que será feito, sem modificar o servidor.
+
+Não envie a prévia para um canal Discord.
+
+## Aplicação
+
+Crie um modo de execução real controlado, com confirmação do operador.
+
+A confirmação pode ocorrer no terminal.
+
+Não crie mensagens de comando dentro do servidor apenas para configurar a estrutura.
+
+## Logs de execução
+
+Registrar localmente:
+
+- Elementos criados.
+- Elementos já existentes.
+- Configurações atualizadas.
+- Permissões aplicadas.
+- Operações não suportadas.
+- Falhas de API.
+- Resultado das validações.
+
+Esses logs são apenas de desenvolvimento e execução do bot.
+
+Não publicar logs nos canais do Discord.
+
+## Rate limits
+
+Respeitar os limites oficiais da API do Discord.
+
+Não utilizar requisições excessivas ou tentativas agressivas.
+
+## Hierarquia do bot
+
+Verificar se o cargo do bot possui posição e permissões suficientes para criar e organizar os 26 cargos.
+
+Se houver uma limitação imposta pela hierarquia do Discord, identificá-la corretamente e explicar a ação mínima necessária.
+
+Não tentar contornar as restrições usando um token de usuário.
+
+## Operações não suportadas
+
+Se alguma configuração não puder ser feita pela API oficial:
+
+1. Não inventar métodos.
+2. Não criar soluções não oficiais.
+3. Não ignorar silenciosamente.
+4. Registrar a configuração como pendente.
+5. Explicar com precisão o que não foi possível aplicar.
+6. Continuar com as outras configurações independentes.
+
+---
+
+# 21. VALIDAÇÃO FINAL OBRIGATÓRIA
+
+Após a execução, leia os dados reais do servidor pela API e valide o resultado.
+
+## Quantidades
+
+Confirmar:
+
+- 15 categorias.
+- 47 canais permanentes do planejamento.
+- 46 canais dentro das categorias.
+- 1 canal independente.
+- 26 cargos personalizados.
+
+## Categorias
+
+Confirmar:
+
+- Os 15 nomes exatos.
+- A ordem correta.
+- A categoria Monitoramento em último lugar.
+- Nenhuma categoria extra criada pelo projeto.
+
+## Canais
+
+Confirmar:
+
+- Todos os 47 nomes exatos.
+- Ordem correta dentro das categorias.
+- Tipo de canal correto.
+- Status da Loja fora das categorias e no topo.
+- Geral como canal de voz.
+- Somente um canal em Monitoramento.
+- Termos da Loja incluído na posição correta.
+- Nenhum canal adicional criado pelo projeto.
+
+## Cargos
+
+Confirmar:
+
+- Todos os 26 nomes exatos.
+- Todas as 26 cores HEX.
+- Ordem hierárquica.
+- 21 cargos exibidos separadamente.
+- 5 cargos sem exibição separada.
+
+## Permissões
+
+Confirmar:
+
+- A configuração-base de `@everyone`.
+- Sobrescritas das categorias.
+- Canais comerciais somente leitura para membros comuns.
+- Categoria Comunidade com conversas permitidas.
+- Canal Enquetes com publicação restrita.
+- Equipe privada.
+- Registros privados.
+- Monitoramento privado.
+- Acesso específico de Moderador e Atendente.
+- Administrador sem a permissão global `Administrator`.
+- Owner e Cofundador com `Administrator`.
+
+## Servidor
+
+Confirmar:
+
+- Nome Destny Store.
+- Comunidade ativada, caso suportado.
+- Verificação Baixa.
+- Filtro explícito para todos os membros.
+- Notificações padrão somente menções.
+- Idioma pt-BR, caso suportado.
+- AutoMod conforme especificado.
+- Modos lentos.
+- Canal Geral com 64 kbps e sem limite de usuários definido.
+
+## Proibições
+
+Confirmar que o projeto:
+
+- Não publicou mensagens.
+- Não publicou embeds.
+- Não adicionou imagens.
+- Não criou banner.
+- Não modificou ícone.
+- Não criou webhooks.
+- Não instalou bots de terceiros.
+- Não configurou tickets.
+- Não configurou boas-vindas.
+- Não criou conteúdo comercial.
+- Não criou canais ou cargos extras.
+- Não criou containers de produtos.
+- Não implementou carrinho de compras.
+- Não criou comandos de venda.
+- Não criou pagamentos ou pedidos.
+
+O Discord pode possuir elementos internos ou gerenciados pela plataforma que não fazem parte da lista de 26 cargos. Não tente apagar elementos nativos para forçar uma contagem artificial.
+
+---
+
+# 22. RELATÓRIO DE CONCLUSÃO
+
+Ao final, apresente no TERMINAL ou em um arquivo local:
+
+1. Quantidade de categorias configuradas.
+2. Quantidade de canais configurados.
+3. Quantidade de cargos configurados.
+4. Resultado das permissões.
+5. Resultado das configurações nativas.
+6. Lista de eventuais limitações da API.
+7. Lista de configurações pendentes.
+8. Resultado da validação de hierarquia e posições.
+9. Confirmação de que nenhum conteúdo foi publicado.
+10. Confirmação de que o projeto poderá ser ampliado futuramente com os módulos de vendas, produtos, carrinho e tickets sem substituir o bot atual.
+
+Não envie esse relatório para um canal do servidor.
+
+Se alguma configuração falhar, não declare que a implementação está 100% concluída.
+
+---
+
+# 23. ORDEM OBRIGATÓRIA DO TRABALHO
+
+Execute as tarefas nesta sequência lógica:
+
+**FASE 1 — PROJETO**
+
+- Criar a aplicação do bot.
+- Preparar autenticação.
+- Definir arquitetura modular para futura expansão.
+- Criar o arquivo de configuração completo da V16.
+- Implementar validações.
+
+**FASE 2 — CARGOS**
+
+- Criar os 26 cargos.
+- Aplicar cores.
+- Aplicar hierarquia.
+- Configurar exibição separada.
+- Aplicar permissões gerais.
+
+**FASE 3 — CATEGORIAS**
+
+- Criar as 15 categorias.
+- Manter a ordem aprovada.
+- Definir permissões de acesso.
+
+**FASE 4 — CANAIS**
+
+- Criar os 47 canais.
+- Organizar posições.
+- Configurar os tipos corretos.
+- Aplicar sobrescritas de permissões.
+- Configurar modos lentos e voz.
+
+**FASE 5 — SERVIDOR**
+
+- Configurar notificações.
+- Configurar verificação.
+- Configurar filtro de mídia.
+- Ativar Comunidade quando possível.
+- Associar os canais de regras e atualizações.
+- Aplicar configurações nativas de segurança.
+
+**FASE 6 — VALIDAÇÃO**
+
+- Comparar o servidor real com a especificação V16.
+- Corrigir divergências que possam ser corrigidas com segurança.
+- Produzir relatório local.
+- Confirmar que a arquitetura aceita futuras expansões.
+
+**FASES FUTURAS — NÃO EXECUTAR**
+
+- Sistema de containers de produtos.
+- Carrinho de compras.
+- Sistema de tickets.
+- Sistema de vendas.
+- Pedidos e pagamentos.
+- Atendimento automatizado.
+- Fidelidade automatizada.
+- Outras funcionalidades comerciais.
+
+Essas fases serão especificadas e autorizadas por mim posteriormente, em novas conversas com o Codex.
+
+---
+
+# 24. INSTRUÇÃO FINAL
+
+Eu quero desenvolver o **bot oficial definitivo da Destny Store**, começando exclusivamente pela configuração do servidor Discord.
+
+O mesmo bot será utilizado futuramente para administrar produtos, vendas, carrinho de compras, tickets, atendimento e fidelidade.
+
+**NÃO CRIE OUTRO BOT PARA ESSAS FUNÇÕES.**
+
+A arquitetura inicial deve ser preparada para receber essas funcionalidades posteriormente, mas nenhum sistema comercial deve ser implementado agora.
+
+Nesta primeira etapa:
+
+Não quero sugestões de banners.
+
+Não quero imagens.
+
+Não quero mensagens.
+
+Não quero textos de boas-vindas.
+
+Não quero descrições comerciais.
+
+Não quero painéis.
+
+Não quero formulários.
+
+Não quero sistemas de atendimento.
+
+Não quero adicionar produtos.
+
+Não quero containers de produtos.
+
+Não quero carrinho de compras.
+
+Não quero tickets.
+
+Não quero pagamentos.
+
+Quero exclusivamente o servidor organizado, com suas categorias, canais, cargos, cores, posições, permissões e configurações nativas.
+
+**NÃO MODIFIQUE O PLANEJAMENTO APROVADO.**
+
+Qualquer dificuldade técnica deve ser tratada como problema de implementação, e não como autorização para redesenhar o servidor.
+
+Comece implementando o projeto completo da PRIMEIRA ETAPA.
+
+Não pare apenas na apresentação de um plano: escreva o código, os arquivos de configuração, os comandos de execução e os testes de validação necessários.
+
+Use o planejamento acima como a única fonte de verdade para a estrutura da Destny Store.
+
+Quando a estrutura do servidor estiver concluída, encerre esta etapa e aguarde minhas futuras instruções para desenvolver os sistemas comerciais.
+
+**O bot deve continuar sendo o mesmo nas próximas etapas.**
