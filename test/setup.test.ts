@@ -194,9 +194,10 @@ test('Combos e Robux ficam após Loja, com Gamepass e leitura pública', () => {
   }
 });
 
-test('Tickets fica após Atendimento, vazio e privado para a equipe', () => {
+test('Tickets antigo permanece após os três novos destinos e privado para a equipe', () => {
   const atendimento = config.categories.findIndex(c => c.key === 'category-05');
-  const tickets = config.categories[atendimento + 1];
+  const tickets = config.categories.find(c => c.key === 'category-tickets')!;
+  assert.equal(config.categories.indexOf(tickets), atendimento + 4);
   assert.equal(tickets.name, '🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦');
   assert.equal(tickets.channels.length, 0);
   const ow = overwrites(tickets, ids, 'guild');
@@ -211,7 +212,7 @@ test('Tickets fica após Atendimento, vazio e privado para a equipe', () => {
 
 test('lote adiciona somente as três categorias e Gamepass, preserva o restante e pode ser repetido', async () => {
   const s = fixture();
-  const batch = config.categoryBatch;
+  const batch = ['category-combos', 'category-robux', 'category-tickets'];
   const batchCategories = config.categories.filter(c => batch.includes(c.key));
   const entries = batchCategories.flatMap(c => [c, ...c.channels]);
   const removedIds = new Set(entries.map(e => ids[e.key]));
@@ -279,4 +280,101 @@ test('lote exige estrutura anterior e cargos necessários antes de aplicar', () 
   const missingCategory = { ...ids };
   delete missingCategory['category-04'];
   assert.throws(() => preflight(s, missingCategory, config.categoryBatch), /categorias anteriores/);
+});
+
+test('Compras, Serviços e Suporte são destinos vazios e privados após Atendimento', () => {
+  const atendimento = config.categories.findIndex(c => c.key === 'category-05');
+  const destinations = config.categories.slice(atendimento + 1, atendimento + 4);
+  assert.equal(config.categories.length, 22);
+  assert.deepEqual(destinations.map(c => c.name), [
+    '💳 • 𝗖𝗢𝗠𝗣𝗥𝗔𝗦', '📝 • 𝗦𝗘𝗥𝗩𝗜𝗖𝗢𝗦', '🛠️ • 𝗦𝗨𝗣𝗢𝗥𝗧𝗘',
+  ]);
+  assert.deepEqual(destinations.map(c => c.key), config.categoryBatch);
+  for (const category of destinations) {
+    assert.equal(category.channels.length, 0);
+    const ow = overwrites(category, ids, 'guild');
+    for (const role of ['role-6', 'role-20', 'role-21', 'role-23'])
+      assert.equal(allowed(ow, ids[role], P.ViewChannel), false);
+    for (const role of ['role-3', 'role-4', 'role-5']) {
+      assert.equal(allowed(ow, ids[role], P.ViewChannel), true);
+      assert.equal(allowed(ow, ids[role], P.SendMessages), true);
+    }
+  }
+});
+
+async function simulateTicketDestinations(optionalAdditionsMissing = false) {
+  const s = fixture();
+  const batch = config.categoryBatch;
+  const destinations = config.categories.filter(c => batch.includes(c.key));
+  const excludedKeys = [...batch, ...(optionalAdditionsMissing ? ['category-combos', 'category-robux', 'category-tickets'] : [])];
+  const excluded = config.categories.filter(c => excludedKeys.includes(c.key)).flatMap(c => [c, ...c.channels]);
+  const excludedIds = new Set(excluded.map(e => ids[e.key]));
+  const liveIds = { ...ids };
+  excluded.forEach(e => delete liveIds[e.key]);
+  s.channels = s.channels.filter(c => !excludedIds.has(c.id));
+  s.channels.filter(c => c.type === 4).forEach((c, i) => { c.position = i; });
+  s.guild.name = 'KAMUI';
+  const legacyCategory = s.channels.find(c => c.id === ids['category-tickets']);
+  if (legacyCategory) {
+    legacyCategory.permission_overwrites.push(access('ticket-king', 'publish'));
+    s.channels.push({
+      id: 'existing-ticket', name: 'atendimento-existente', type: 0, position: 0,
+      parent_id: legacyCategory.id,
+      permission_overwrites: [{ id: 'customer', type: 1, allow: bits(['ViewChannel']), deny: '0' }],
+    });
+  }
+  const originalTickets = JSON.stringify(s.channels.filter(c => c.type !== 4));
+  const originalPermissions = JSON.stringify(legacyCategory?.permission_overwrites);
+  const originalSettings = JSON.stringify({ guild: s.guild, roles: s.roles, rules: s.rules });
+  preflight(s, liveIds, batch);
+  const plan = preview(s, liveIds, batch).filter(a => a.operation === 'criar');
+  assert.equal(plan.length, 3);
+  assert.ok(plan.every(a => a.changes.type === 4));
+  const expectedFirst = s.channels.find(c => c.id === ids['category-05'])!.position + 1;
+  assert.equal(plan.find(a => a.label === destinations[0].name)!.changes.position, expectedFirst);
+  const created: string[] = [];
+  const api: Transport = {
+    get: async () => { assert.fail('Nenhuma operação em cargos ou configurações gerais'); },
+    post: async (path, body) => {
+      assert.equal(path, '/guilds/guild/channels');
+      assert.equal(body.type, 4);
+      const category = destinations.find(c => c.name === body.name)!;
+      assert.ok(category);
+      const value = { id: ids[category.key], ...body };
+      s.channels.push(value);
+      created.push(body.name);
+      return value;
+    },
+    patch: async (path, body) => {
+      assert.equal(path, '/guilds/guild/channels');
+      assert.ok(Array.isArray(body));
+      for (const item of body) {
+        assert.deepEqual(Object.keys(item).sort(), ['id', 'position']);
+        const category = s.channels.find(c => c.id === item.id)!;
+        assert.ok(category);
+        assert.equal(category.type, 4);
+        category.position = item.position;
+      }
+      return {};
+    },
+  };
+  let saved = 0;
+  for (let i = 0; i < 2; i++) {
+    await apply(api, 'guild', s, liveIds, async () => { saved++; }, () => {}, batch);
+    assert.deepEqual(inspect(s, liveIds, batch), []);
+    assert.equal(JSON.stringify(s.channels.filter(c => c.type !== 4)), originalTickets);
+    assert.equal(JSON.stringify(legacyCategory?.permission_overwrites), originalPermissions);
+    assert.equal(JSON.stringify({ guild: s.guild, roles: s.roles, rules: s.rules }), originalSettings);
+    preflight(s, liveIds, batch);
+  }
+  assert.deepEqual(created, destinations.map(c => c.name));
+  assert.equal(saved, 3);
+}
+
+test('lote de destinos preserva tickets e permissões existentes, sem duplicações', async () => {
+  await simulateTicketDestinations();
+});
+
+test('lote de destinos funciona com adições opcionais ausentes e ordena somente categorias presentes', async () => {
+  await simulateTicketDestinations(true);
 });

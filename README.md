@@ -1,6 +1,6 @@
 # Destny Store — Etapa 1 / V16
 
-Configuração modular do servidor com o mesmo bot já criado. Somente estrutura: 19 categorias, 50 canais, 26 cargos, permissões e opções nativas. Não registra comandos, não publica mensagens, não cria imagens, webhooks ou funcionalidades comerciais. A configuração é executada pelo terminal usando REST oficial e encerra ao terminar; não precisa manter o bot conectado nesta etapa.
+Configuração modular do servidor com o mesmo bot já criado. Somente estrutura: 22 categorias, 50 canais, 26 cargos, permissões e opções nativas. Não registra comandos, não publica mensagens, não cria imagens, webhooks ou funcionalidades comerciais. A configuração é executada pelo terminal usando REST oficial e encerra ao terminar; não precisa manter o bot conectado nesta etapa.
 
 ## Preparação no Codespace
 
@@ -16,7 +16,7 @@ npm test
 
 O Codespace recebe os secrets DISCORD_TOKEN e DISCORD_GUILD_ID. GUILD_ID também é aceito, por compatibilidade com o V16. Nunca imprima o token. Não é preciso criar .env. O programa não carrega arquivos .env automaticamente.
 
-A dependência ^14.16.3 seleciona a versão estável compatível da linha 14 no npm, não o código de desenvolvimento do GitHub. Após instalar e validar, preserve o package-lock.json gerado. As adições de Combos, Robux e Tickets foram verificadas com TypeScript e 14 testes automatizados. A validação no servidor real acontece após a confirmação do operador.
+A dependência ^14.16.3 seleciona a versão estável compatível da linha 14 no npm, não o código de desenvolvimento do GitHub. Após instalar e validar, preserve o package-lock.json gerado. As alterações são verificadas com TypeScript e testes automatizados de permissões e reexecução. A validação no servidor real acontece após a confirmação do operador.
 
 ## Simular
 
@@ -88,15 +88,31 @@ Fonte de verdade: Destny_Store_Prompt_Mestre_V16.txt.
 - `💸 • 𝗥𝗢𝗕𝗨𝗫`: logo após Combos, com o único canal `「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ`.
 - Combos e Robux permitem leitura pública e publicação para Administrador/Atendente, além do acesso nativo de Owner/Cofundador.
 - `🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦`: vazia, logo após Atendimento; oculta para membros comuns e acessível à equipe autorizada. O sistema de tickets externo deve conceder acesso ao cliente em cada canal criado. O configurador não cria tickets nem altera canais de atendimento futuros.
-- Total atual do planejamento: **19 categorias, 50 canais permanentes e 26 cargos**. Monitoramento continua em último lugar entre as categorias planejadas.
+- Após esse lote, o planejamento passou a **19 categorias, 50 canais permanentes e 26 cargos**. Monitoramento continua em último lugar entre as categorias planejadas.
 
-Para aplicar somente essas adições em um servidor já configurado:
+O lote ativo foi atualizado para os três destinos específicos de tickets descritos abaixo. Para simular e aplicar o lote ativo:
 
 ~~~bash
 npm run setup:additions:dry-run
 npm run setup:additions
 ~~~
 
-O segundo comando exige a confirmação `APLICAR ID` no terminal. Mantém o nome atual do servidor, os cargos, as opções nativas, o AutoMod e as permissões dos canais existentes fora deste lote. Reorganiza as categorias planejadas para inserir as novas nas posições aprovadas. `config.categoryBatch` define as três categorias do lote; as chaves anteriores são preservadas. O relatório `reports/category-additions.json` valida apenas esse lote; não certifica as configurações gerais.
+O segundo comando exige a confirmação `APLICAR ID` no terminal. Mantém o nome atual do servidor, os cargos, as opções nativas, o AutoMod e as permissões dos canais existentes fora deste lote. Reorganiza as categorias planejadas para inserir as novas nas posições aprovadas. `config.categoryBatch` define as categorias do lote ativo; as chaves anteriores são preservadas. O relatório `reports/category-additions.json` valida apenas esse lote; não certifica as configurações gerais.
 
 O comando original `setup:apply` continua sendo uma reaplicação completa do planejamento, inclusive do nome definido em `config.name`.
+
+## Destinos separados por tipo de ticket
+
+O lote ativo de `setup:additions` cria ou atualiza exclusivamente estas três categorias privadas, logo após Atendimento e nesta ordem:
+
+- `💳 • 𝗖𝗢𝗠𝗣𝗥𝗔𝗦`: destino de Compras e pagamentos.
+- `📝 • 𝗦𝗘𝗥𝗩𝗜𝗖𝗢𝗦`: destino de Serviços personalizados.
+- `🛠️ • 𝗦𝗨𝗣𝗢𝗥𝗧𝗘`: destino de Suporte ao servidor.
+
+As três começam vazias. A equipe autorizada pode visualizar e publicar; `@everyone` e os cargos públicos não recebem acesso. Owner/Cofundador mantêm o acesso nativo de Administrator. Cada cliente deve receber acesso apenas ao seu próprio canal, configurado pelo Ticket King. O bot externo deve possuir as permissões necessárias para usar essas categorias.
+
+A categoria antiga `🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦`, suas permissões e os tickets existentes ficam preservados. Nenhum ticket é transferido, encerrado ou apagado. No painel do Ticket King, selecione o destino correspondente para cada uma das três opções. O configurador não altera a integração externa.
+
+Total atual planejado: **22 categorias, 50 canais permanentes e 26 cargos**. Os canais criados pelo Ticket King são dinâmicos e não entram nessa contagem permanente.
+
+O lote exige os cargos da equipe e as categorias Loja/Atendimento existentes. Outras adições ainda ausentes ficam pendentes de uma execução completa; não bloqueiam este lote e não são criadas por ele. A ordenação e a validação do lote consideram as categorias efetivamente presentes, mantendo Monitoramento no fim da sequência planejada. `setup:apply` continua sendo uma reaplicação completa, incluindo nome e configurações gerais.

@@ -74,7 +74,7 @@ async function main() {
       roles: config.roles.filter(r => after.roles.some(x => x.id === ids[r.key])).length,
     },
     issues,
-    pending: categoryKeys ? ['No sistema de tickets, selecione a nova categoria como destino e configure o acesso individual do cliente.'] : [
+    pending: categoryKeys ? ['No Ticket King, associe Compras, Serviços e Suporte às opções correspondentes e configure o acesso individual do cliente.'] : [
       ...(!config.security.keywords.length && !config.security.domains.length ? ['Lista de palavras/domínios ainda não fornecida; filtro personalizado não está ativo.'] : []),
       'Revisar proteções adicionais de raids e alertas no painel Segurança do Discord; não foram presumidas ativas.',
       'Stream habilita vídeo/compartilhamento. Não existe um bit separado chamado Video na API.',

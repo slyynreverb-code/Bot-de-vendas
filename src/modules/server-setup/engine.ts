@@ -73,8 +73,8 @@ export function preflight(s: Snapshot, ids: Record<string, string>, categoryKeys
     for (const key of ['role-3', 'role-4', 'role-5']) {
       if (!ids[key]) throw new Error('O lote exige os cargos da equipe já configurados.');
     }
-    if (config.categories.some(c => !categoryKeys.includes(c.key) && !ids[c.key]))
-      throw new Error('O lote exige as categorias anteriores já configuradas para preservar a ordem.');
+    if (['category-04', 'category-05'].some(key => !ids[key]))
+      throw new Error('O lote exige as categorias anteriores Loja e Atendimento para preservar a ordem.');
   }
   if (!s.user.bot) throw new Error('Somente token de bot é permitido.');
   const memberRoles = s.roles.filter(r => s.member.roles.includes(r.id));
@@ -148,9 +148,10 @@ export function inspect(s: Snapshot, ids: Record<string, string>, categoryKeys?:
     config.roles.forEach(r => check(r.name, s.roles.find(x => x.id === ids[r.key]), roleBody(r)));
     check('@everyone', s.roles.find(x => x.id === s.guild.id), { permissions: bits(config.everyone) });
   }
+  const orderedCategories = categoryKeys ? config.categories.filter(c => ids[c.key]) : config.categories;
   config.categories.forEach((c, i) => {
     if (categoryKeys && !categoryKeys.includes(c.key)) return;
-    check(c.name, s.channels.find(x => x.id === ids[c.key]), { name: c.name, type: 4, position: i,
+    check(c.name, s.channels.find(x => x.id === ids[c.key]), { name: c.name, type: 4, position: categoryKeys ? orderedCategories.indexOf(c) : i,
       permission_overwrites: overwrites(c, ids, s.guild.id) });
     c.channels.forEach((ch, j) => check(ch.name, s.channels.find(x => x.id === ids[ch.key]),
       { ...channelBody(ch, c, ids, s.guild.id), position: ch.type === 2 ? 0 : j }));
@@ -186,9 +187,10 @@ export function preview(s: Snapshot, ids: Record<string, string>, categoryKeys?:
     config.roles.forEach(r => add(r.name, s.roles.find(x => x.id === ids[r.key]), roleBody(r)));
     add('@everyone', s.roles.find(x => x.id === s.guild.id), { permissions: bits(config.everyone) });
   }
+  const orderedCategories = categoryKeys ? config.categories.filter(c => ids[c.key] || categoryKeys.includes(c.key)) : config.categories;
   config.categories.forEach((c, i) => {
     if (categoryKeys && !categoryKeys.includes(c.key)) return;
-    add(c.name, s.channels.find(x => x.id === ids[c.key]), { name: c.name, type: 4, position: i,
+    add(c.name, s.channels.find(x => x.id === ids[c.key]), { name: c.name, type: 4, position: categoryKeys ? orderedCategories.indexOf(c) : i,
       permission_overwrites: overwrites(c, symbolic, s.guild.id) });
     c.channels.forEach((ch, j) => add(ch.name, s.channels.find(x => x.id === ids[ch.key]),
       { ...channelBody(ch, c, symbolic, s.guild.id), position: ch.type === 2 ? 0 : j }));
@@ -253,7 +255,7 @@ export async function apply(api: Transport, guildId: string, s: Snapshot, ids: R
   // parent_id fields in a bulk reorder (40009), even when their values are unchanged.
   const channelPositions = [
     ...(!categoryKeys ? [{ id: ids.status, position: 0 }] : []),
-    ...config.categories.flatMap((c, i) => [
+    ...config.categories.filter(c => ids[c.key]).flatMap((c, i) => [
       { id: ids[c.key], position: i },
       ...(!categoryKeys || categoryKeys.includes(c.key) ? c.channels.map((ch, j) => ({ id: ids[ch.key], position: ch.type === 2 ? 0 : j })) : [])
     ])
