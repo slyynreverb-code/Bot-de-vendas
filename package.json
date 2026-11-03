@@ -11,7 +11,9 @@
     "test": "tsx --test test/*.test.ts",
     "setup:dry-run": "tsx src/setup.ts --dry-run",
     "setup:apply": "tsx src/setup.ts --apply",
-    "setup:verify": "tsx src/setup.ts --verify"
+    "setup:verify": "tsx src/setup.ts --verify",
+    "setup:additions": "tsx src/setup.ts --apply --categories-only",
+    "setup:additions:dry-run": "tsx src/setup.ts --dry-run --categories-only"
   },
   "dependencies": {
     "discord.js": "^14.16.3"

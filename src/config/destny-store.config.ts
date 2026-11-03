@@ -384,6 +384,37 @@ export const config = {
       }
     },
     {
+      "key": "category-combos",
+      "name": "🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦",
+      "channels": [],
+      "position": 5,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-robux",
+      "name": "💸 • 𝗥𝗢𝗕𝗨𝗫",
+      "channels": [
+        {
+          "key": "channel-robux-gamepass",
+          "name": "「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ",
+          "type": 0,
+          "position": 0
+        }
+      ],
+      "position": 6,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
       "key": "category-05",
       "name": "🎫 • 𝗔𝗧𝗘𝗡𝗗𝗜𝗠𝗘𝗡𝗧𝗢",
       "channels": [
@@ -400,8 +431,20 @@ export const config = {
           "position": 1
         }
       ],
-      "position": 5,
+      "position": 7,
       "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "publish",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-tickets",
+      "name": "🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦",
+      "channels": [],
+      "position": 8,
+      "access": "hidden",
       "staff": {
         "admin": "publish",
         "moderator": "publish",
@@ -425,7 +468,7 @@ export const config = {
           "position": 1
         }
       ],
-      "position": 6,
+      "position": 9,
       "access": "read",
       "staff": {
         "admin": "publish",
@@ -450,7 +493,7 @@ export const config = {
           "position": 1
         }
       ],
-      "position": 7,
+      "position": 10,
       "access": "read",
       "staff": {
         "admin": "publish",
@@ -475,7 +518,7 @@ export const config = {
           "position": 1
         }
       ],
-      "position": 8,
+      "position": 11,
       "access": "read",
       "staff": {
         "admin": "publish",
@@ -512,7 +555,7 @@ export const config = {
           "position": 3
         }
       ],
-      "position": 9,
+      "position": 12,
       "access": "read",
       "staff": {
         "admin": "publish",
@@ -543,7 +586,7 @@ export const config = {
           "position": 2
         }
       ],
-      "position": 10,
+      "position": 13,
       "access": "read",
       "staff": {
         "admin": "publish",
@@ -568,7 +611,7 @@ export const config = {
           "position": 1
         }
       ],
-      "position": 11,
+      "position": 14,
       "access": "read",
       "staff": {
         "admin": "publish",
@@ -605,7 +648,7 @@ export const config = {
           "position": 3
         }
       ],
-      "position": 12,
+      "position": 15,
       "access": "read",
       "staff": {
         "admin": "publish",
@@ -630,7 +673,7 @@ export const config = {
           "position": 1
         }
       ],
-      "position": 13,
+      "position": 16,
       "access": "hidden",
       "ownerOnly": true,
       "staff": {
@@ -668,7 +711,7 @@ export const config = {
           "position": 3
         }
       ],
-      "position": 14,
+      "position": 17,
       "access": "hidden",
       "staff": {
         "admin": "publish",
@@ -699,7 +742,7 @@ export const config = {
           "position": 2
         }
       ],
-      "position": 15,
+      "position": 18,
       "access": "hidden",
       "staff": {
         "admin": "publish",
@@ -718,7 +761,7 @@ export const config = {
           "position": 0
         }
       ],
-      "position": 16,
+      "position": 19,
       "access": "hidden",
       "staff": {
         "admin": "publish",
@@ -815,5 +858,10 @@ export const config = {
       "purchasesBRL": 1000,
       "discountPercent": 15
     }
+  ],
+  "categoryBatch": [
+    "category-combos",
+    "category-robux",
+    "category-tickets"
   ]
 };

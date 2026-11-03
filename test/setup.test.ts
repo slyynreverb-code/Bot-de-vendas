@@ -44,7 +44,7 @@ function allowed(overrides: Record<string, any>[], roleId: string, bit: bigint):
 }
 test('V16 quantidades, Unicode e restrições administrativas', () => {
   validateConfig();
-  assert.equal(config.categories.flatMap(c => c.channels).length + 1, 49);
+  assert.equal(config.categories.flatMap(c => c.channels).length + 1, 50);
   assert.equal(config.categories[2].channels[4].name, '「🗳️」ᴇɴQᴜᴇᴛᴇꜱ');
   assert.equal(config.categories.find(c => c.key === 'category-15')!.channels.length, 1);
   assert.equal(config.roles[2].permissions.includes('Administrator'), false);
@@ -172,4 +172,111 @@ test('Arquivos fica antes de Equipe e concede acesso explícito apenas a Owner',
   assert.deepEqual(ow.map(o => o.id).sort(), ['guild', ids['role-1']].sort());
   // Cofundador still has Administrator: a channel overwrite cannot hide it from that role.
   assert.ok(config.roles[1].permissions.includes('Administrator'));
+});
+
+test('Combos e Robux ficam após Loja, com Gamepass e leitura pública', () => {
+  const loja = config.categories.findIndex(c => c.key === 'category-04');
+  const combos = config.categories[loja + 1];
+  const robux = config.categories[loja + 2];
+  assert.equal(combos.name, '🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦');
+  assert.equal(combos.channels.length, 0);
+  assert.equal(robux.name, '💸 • 𝗥𝗢𝗕𝗨𝗫');
+  assert.equal(robux.channels.length, 1);
+  assert.equal(robux.channels[0].name, '「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ');
+  assert.equal(robux.channels[0].type, 0);
+  for (const category of [combos, robux]) {
+    const ow = overwrites(category, ids, 'guild');
+    assert.equal(allowed(ow, ids['role-20'], P.ViewChannel), true);
+    assert.equal(allowed(ow, ids['role-20'], P.SendMessages), false);
+    assert.equal(allowed(ow, ids['role-4'], P.SendMessages), false);
+    assert.equal(allowed(ow, ids['role-3'], P.SendMessages), true);
+    assert.equal(allowed(ow, ids['role-5'], P.SendMessages), true);
+  }
+});
+
+test('Tickets fica após Atendimento, vazio e privado para a equipe', () => {
+  const atendimento = config.categories.findIndex(c => c.key === 'category-05');
+  const tickets = config.categories[atendimento + 1];
+  assert.equal(tickets.name, '🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦');
+  assert.equal(tickets.channels.length, 0);
+  const ow = overwrites(tickets, ids, 'guild');
+  for (const role of ['role-6', 'role-20', 'role-21', 'role-23'])
+    assert.equal(allowed(ow, ids[role], P.ViewChannel), false);
+  for (const role of ['role-3', 'role-4', 'role-5']) {
+    assert.equal(allowed(ow, ids[role], P.ViewChannel), true);
+    assert.equal(allowed(ow, ids[role], P.SendMessages), true);
+  }
+  assert.equal(config.categories.at(-1)!.key, 'category-15');
+});
+
+test('lote adiciona somente as três categorias e Gamepass, preserva o restante e pode ser repetido', async () => {
+  const s = fixture();
+  const batch = config.categoryBatch;
+  const batchCategories = config.categories.filter(c => batch.includes(c.key));
+  const entries = batchCategories.flatMap(c => [c, ...c.channels]);
+  const removedIds = new Set(entries.map(e => ids[e.key]));
+  const liveIds = { ...ids };
+  entries.forEach(e => delete liveIds[e.key]);
+  s.channels = s.channels.filter(c => !removedIds.has(c.id));
+  s.channels.filter(c => c.type === 4).forEach((c, i) => { c.position = i; });
+  // Settings previously customized by the operator must stay intact.
+  s.guild.name = 'KAMUI';
+  s.guild.verification_level = 2;
+  s.rules = [];
+  s.roles.find(r => r.id === 'guild')!.permissions = bits([...config.everyone, 'EmbedLinks']);
+  const chat = s.channels.find(c => c.id === ids['channel-03-1'])!;
+  chat.permission_overwrites.push(access('other-bot', 'publish'));
+  const untouched = JSON.stringify({ guild: s.guild, roles: s.roles, rules: s.rules, chat });
+  preflight(s, liveIds, batch);
+  const plan = preview(s, liveIds, batch);
+  assert.deepEqual(plan.filter(a => a.operation === 'criar').map(a => a.label).sort(), entries.map(e => e.name).sort());
+  const created: string[] = [];
+  const api: Transport = {
+    get: async () => { assert.fail('Lote não consulta nem altera cargos'); },
+    post: async (path, body) => {
+      assert.equal(path, '/guilds/guild/channels');
+      const entry = entries.find(e => e.name === body.name)!;
+      assert.ok(entry);
+      const value = { id: ids[entry.key], ...body };
+      s.channels.push(value);
+      created.push(body.name);
+      return value;
+    },
+    patch: async (path, body) => {
+      assert.equal(path, '/guilds/guild/channels');
+      assert.ok(Array.isArray(body));
+      for (const value of body) {
+        assert.deepEqual(Object.keys(value).sort(), ['id', 'position']);
+        const channel = s.channels.find(c => c.id === value.id)!;
+        assert.ok(channel);
+        channel.position = value.position;
+      }
+      return {};
+    },
+  };
+  let saved = 0;
+  await apply(api, 'guild', s, liveIds, async () => { saved++; }, () => {}, batch);
+  assert.equal(saved, 4);
+  assert.equal(created.length, 4);
+  assert.deepEqual(inspect(s, liveIds, batch), []);
+  assert.equal(JSON.stringify({ guild: s.guild, roles: s.roles, rules: s.rules, chat }), untouched);
+  assert.deepEqual(s.channels.find(c => c.id === ids['channel-robux-gamepass'])!.permission_overwrites,
+    overwrites(batchCategories.find(c => c.key === 'category-robux')!, liveIds, 'guild'));
+  preflight(s, liveIds, batch);
+  await apply(api, 'guild', s, liveIds, async () => { saved++; }, () => {}, batch);
+  assert.equal(created.length, 4);
+  assert.equal(saved, 4);
+  assert.deepEqual(inspect(s, liveIds, batch), []);
+  assert.equal(JSON.stringify({ guild: s.guild, roles: s.roles, rules: s.rules, chat }), untouched);
+});
+
+test('lote exige estrutura anterior e cargos necessários antes de aplicar', () => {
+  const s = fixture();
+  assert.throws(() => preflight(s, ids, ['unknown']), /Lote/);
+  const missingRole = { ...ids };
+  delete missingRole['role-3'];
+  assert.throws(() => preflight(s, missingRole, config.categoryBatch), /cargos da equipe/);
+  const missingCategory = { ...ids };
+  delete missingCategory['category-04'];
+  assert.throws(() => preflight(s, missingCategory, config.categoryBatch), /categorias anteriores/);
 });

@@ -1,6 +1,6 @@
 # Destny Store — Etapa 1 / V16
 
-Configuração modular do servidor com o mesmo bot já criado. Somente estrutura: 16 categorias, 49 canais, 26 cargos, permissões e opções nativas. Não registra comandos, não publica mensagens, não cria imagens, webhooks ou funcionalidades comerciais. A configuração é executada pelo terminal usando REST oficial e encerra ao terminar; não precisa manter o bot conectado nesta etapa.
+Configuração modular do servidor com o mesmo bot já criado. Somente estrutura: 19 categorias, 50 canais, 26 cargos, permissões e opções nativas. Não registra comandos, não publica mensagens, não cria imagens, webhooks ou funcionalidades comerciais. A configuração é executada pelo terminal usando REST oficial e encerra ao terminar; não precisa manter o bot conectado nesta etapa.
 
 ## Preparação no Codespace
 
@@ -16,7 +16,7 @@ npm test
 
 O Codespace recebe os secrets DISCORD_TOKEN e DISCORD_GUILD_ID. GUILD_ID também é aceito, por compatibilidade com o V16. Nunca imprima o token. Não é preciso criar .env. O programa não carrega arquivos .env automaticamente.
 
-A dependência ^14.16.3 seleciona a versão estável compatível da linha 14 no npm, não o código de desenvolvimento do GitHub. Após instalar e validar, preserve o package-lock.json gerado. O ambiente de autoria estava indisponível: compilação e testes precisam ser confirmados no Codespace; não foram declarados aprovados.
+A dependência ^14.16.3 seleciona a versão estável compatível da linha 14 no npm, não o código de desenvolvimento do GitHub. Após instalar e validar, preserve o package-lock.json gerado. As adições de Combos, Robux e Tickets foram verificadas com TypeScript e 14 testes automatizados. A validação no servidor real acontece após a confirmação do operador.
 
 ## Simular
 
@@ -77,7 +77,26 @@ Fonte de verdade: Destny_Store_Prompt_Mestre_V16.txt.
 ## Alterações aprovadas após o V16
 
 - Atualizações foi movido para a primeira posição de Loja, com a chave de identidade preservada.
-- Arquivos foi adicionado antes de Equipe, com Imagens e Textos. As contagens atuais são 16 categorias, 49 canais e 26 cargos.
+- Arquivos foi adicionado antes de Equipe, com Imagens e Textos. Após essa adição, eram 16 categorias, 49 canais e 26 cargos.
 - Arquivos nega visualização a @everyone e concede acesso explícito somente a Owner. Os dois canais recebem a mesma política.
 - Cofundador mantém Administrator, conforme o planejamento. Por limitação nativa do Discord, qualquer membro com Administrator (incluindo Cofundador e o bot) e o proprietário real podem ver Arquivos. Remover esse privilégio global exige uma decisão separada.
 - Os canais são criados vazios, sem enviar imagens ou textos. Links de anexos Discord podem expirar; não são uma hospedagem permanente.
+
+## Adições: Combos, Robux e Tickets
+
+- `🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦`: vazia por enquanto, logo após Loja.
+- `💸 • 𝗥𝗢𝗕𝗨𝗫`: logo após Combos, com o único canal `「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ`.
+- Combos e Robux permitem leitura pública e publicação para Administrador/Atendente, além do acesso nativo de Owner/Cofundador.
+- `🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦`: vazia, logo após Atendimento; oculta para membros comuns e acessível à equipe autorizada. O sistema de tickets externo deve conceder acesso ao cliente em cada canal criado. O configurador não cria tickets nem altera canais de atendimento futuros.
+- Total atual do planejamento: **19 categorias, 50 canais permanentes e 26 cargos**. Monitoramento continua em último lugar entre as categorias planejadas.
+
+Para aplicar somente essas adições em um servidor já configurado:
+
+~~~bash
+npm run setup:additions:dry-run
+npm run setup:additions
+~~~
+
+O segundo comando exige a confirmação `APLICAR ID` no terminal. Mantém o nome atual do servidor, os cargos, as opções nativas, o AutoMod e as permissões dos canais existentes fora deste lote. Reorganiza as categorias planejadas para inserir as novas nas posições aprovadas. `config.categoryBatch` define as três categorias do lote; as chaves anteriores são preservadas. O relatório `reports/category-additions.json` valida apenas esse lote; não certifica as configurações gerais.
+
+O comando original `setup:apply` continua sendo uma reaplicação completa do planejamento, inclusive do nome definido em `config.name`.

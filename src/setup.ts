@@ -12,9 +12,11 @@ let lockPath = '';
 async function main() {
   validateConfig();
   const args = process.argv.slice(2);
-  if (args.length !== 1 || !['--dry-run', '--apply', '--verify'].includes(args[0]))
+  if (!['--dry-run', '--apply', '--verify'].includes(args[0]) || args.length > 2 ||
+      (args.length === 2 && args[1] !== '--categories-only'))
     throw new Error('Use npm run setup:dry-run, setup:apply ou setup:verify.');
   const mode = args[0];
+  const categoryKeys = args[1] === '--categories-only' ? config.categoryBatch : undefined;
   const token = process.env.DISCORD_TOKEN;
   const guildId = process.env.DISCORD_GUILD_ID ?? process.env.GUILD_ID;
   if (!token || !guildId || !/^\d{17,20}$/.test(guildId))
@@ -33,8 +35,8 @@ async function main() {
   catch (e) { if ((e as NodeJS.ErrnoException).code !== 'ENOENT') throw new Error('Estado local inválido; preserve o arquivo e revise.'); }
   const before = await snapshot(api, guildId);
   const ids = resolve(before, state);
-  preflight(before, ids);
-  const plan = preview(before, ids);
+  preflight(before, ids, categoryKeys);
+  const plan = preview(before, ids, categoryKeys);
   log({ mode, guild: guildId, plan });
   if (mode === '--apply') {
     if (!stdin.isTTY) throw new Error('Aplicação exige terminal interativo do operador.');
@@ -53,26 +55,26 @@ async function main() {
     // Check again after confirmation to avoid applying against stale Discord data.
     const fresh = await snapshot(api, guildId);
     const freshIds = resolve(fresh, state);
-    preflight(fresh, freshIds);
+    preflight(fresh, freshIds, categoryKeys);
     Object.assign(ids, freshIds);
     const persist = async () => {
       await writeFile(statePath + '.tmp', JSON.stringify(ids, null, 2), { mode: 0o600 });
       await rename(statePath + '.tmp', statePath);
     };
     await persist();
-    await apply(api, guildId, fresh, ids, persist, log);
+    await apply(api, guildId, fresh, ids, persist, log, categoryKeys);
   }
   const after = mode === '--apply' ? await snapshot(api, guildId) : before;
-  const issues = inspect(after, ids);
+  const issues = inspect(after, ids, categoryKeys);
   const report = {
-    version: config.version, mode, guildId, date: new Date().toISOString(),
+    version: config.version, mode, scope: categoryKeys ?? 'full', guildId, date: new Date().toISOString(),
     counts: {
       categories: config.categories.filter(c => after.channels.some(x => x.id === ids[c.key])).length,
       channels: [config.status, ...config.categories.flatMap(c => c.channels)].filter(c => after.channels.some(x => x.id === ids[c.key])).length,
       roles: config.roles.filter(r => after.roles.some(x => x.id === ids[r.key])).length,
     },
     issues,
-    pending: [
+    pending: categoryKeys ? ['No sistema de tickets, selecione a nova categoria como destino e configure o acesso individual do cliente.'] : [
       ...(!config.security.keywords.length && !config.security.domains.length ? ['Lista de palavras/domínios ainda não fornecida; filtro personalizado não está ativo.'] : []),
       'Revisar proteções adicionais de raids e alertas no painel Segurança do Discord; não foram presumidas ativas.',
       'Stream habilita vídeo/compartilhamento. Não existe um bit separado chamado Video na API.',
@@ -86,8 +88,9 @@ async function main() {
     complete: mode !== '--dry-run' && issues.length === 0,
   };
   await mkdir('reports', { recursive: true });
-  await writeFile('reports/latest.json', JSON.stringify(report, null, 2), { mode: 0o600 });
-  console.log('Relatório local: reports/latest.json');
+  const reportPath = categoryKeys ? 'reports/category-additions.json' : 'reports/latest.json';
+  await writeFile(reportPath, JSON.stringify(report, null, 2), { mode: 0o600 });
+  console.log('Relatório local: ' + reportPath);
   console.log(JSON.stringify({ counts: report.counts, issues, pending: report.pending, complete: report.complete }, null, 2));
   if (mode !== '--dry-run' && issues.length) process.exitCode = 1;
 }

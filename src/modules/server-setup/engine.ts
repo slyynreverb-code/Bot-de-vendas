@@ -66,7 +66,16 @@ export function rolePositionPlan(roles: Json[], memberRoleIds: string[], ids: Re
   return desired.map((r, position) => ({ id: r.id, position }));
 }
 
-export function preflight(s: Snapshot, ids: Record<string, string>): void {
+export function preflight(s: Snapshot, ids: Record<string, string>, categoryKeys?: string[]): void {
+  if (categoryKeys) {
+    if (!categoryKeys.length || categoryKeys.some(key => !config.categories.some(c => c.key === key)))
+      throw new Error('Lote de categorias inválido.');
+    for (const key of ['role-3', 'role-4', 'role-5']) {
+      if (!ids[key]) throw new Error('O lote exige os cargos da equipe já configurados.');
+    }
+    if (config.categories.some(c => !categoryKeys.includes(c.key) && !ids[c.key]))
+      throw new Error('O lote exige as categorias anteriores já configuradas para preservar a ordem.');
+  }
   if (!s.user.bot) throw new Error('Somente token de bot é permitido.');
   const memberRoles = s.roles.filter(r => s.member.roles.includes(r.id));
   const highest = [...memberRoles].sort(compareRoles).at(-1);
@@ -82,7 +91,9 @@ export function preflight(s: Snapshot, ids: Record<string, string>): void {
       throw new Error('Mova o cargo técnico do bot acima de ' + r.name + '. Cargos gerenciados não podem ser adotados.');
   }
   const approved = new Set([s.guild.id, ...Object.values(ids)]);
-  for (const c of s.channels.filter(c => Object.values(ids).includes(c.id))) {
+  const scopedIds = categoryKeys ? new Set(config.categories.filter(c => categoryKeys.includes(c.key))
+    .flatMap(c => [ids[c.key], ...c.channels.map(ch => ids[ch.key])]).filter(Boolean)) : undefined;
+  for (const c of s.channels.filter(c => scopedIds ? scopedIds.has(c.id) : Object.values(ids).includes(c.id))) {
     if ((c.permission_overwrites ?? []).some((o: Json) => !approved.has(o.id)))
       throw new Error('Sobrescrita preexistente fora do planejamento em ' + c.name + '; preserve e revise antes de aplicar.');
   }
@@ -127,20 +138,24 @@ export function ruleDelta(current: Json, wanted: Json): Json {
     Object.keys(body.trigger_metadata).map(k => [k, current.trigger_metadata?.[k]]));
   return delta(compare, body);
 }
-export function inspect(s: Snapshot, ids: Record<string, string>): string[] {
+export function inspect(s: Snapshot, ids: Record<string, string>, categoryKeys?: string[]): string[] {
   const issues: string[] = [];
   const check = (label: string, current: Json | undefined, wanted: Json) => {
     if (!current) issues.push('Ausente: ' + label);
     else { const d = delta(current, wanted); if (Object.keys(d).length) issues.push('Divergência: ' + label + ' ' + JSON.stringify(d)); }
   };
-  config.roles.forEach(r => check(r.name, s.roles.find(x => x.id === ids[r.key]), roleBody(r)));
-  check('@everyone', s.roles.find(x => x.id === s.guild.id), { permissions: bits(config.everyone) });
+  if (!categoryKeys) {
+    config.roles.forEach(r => check(r.name, s.roles.find(x => x.id === ids[r.key]), roleBody(r)));
+    check('@everyone', s.roles.find(x => x.id === s.guild.id), { permissions: bits(config.everyone) });
+  }
   config.categories.forEach((c, i) => {
+    if (categoryKeys && !categoryKeys.includes(c.key)) return;
     check(c.name, s.channels.find(x => x.id === ids[c.key]), { name: c.name, type: 4, position: i,
       permission_overwrites: overwrites(c, ids, s.guild.id) });
     c.channels.forEach((ch, j) => check(ch.name, s.channels.find(x => x.id === ids[ch.key]),
       { ...channelBody(ch, c, ids, s.guild.id), position: ch.type === 2 ? 0 : j }));
   });
+  if (categoryKeys) return issues;
   check(config.status.name, s.channels.find(x => x.id === ids.status),
     { ...channelBody(config.status, undefined, ids, s.guild.id), position: 0 });
   check('Servidor', s.guild, guildBody(s, ids));
@@ -157,7 +172,7 @@ export function inspect(s: Snapshot, ids: Record<string, string>): string[] {
   if (extraRoles.length) issues.push('Cargos extras preservados (podem conceder privilégios): ' + extraRoles.map(r => r.name).join(', '));
   return issues;
 }
-export function preview(s: Snapshot, ids: Record<string, string>): Json[] {
+export function preview(s: Snapshot, ids: Record<string, string>, categoryKeys?: string[]): Json[] {
   const actions: Json[] = [];
   const add = (label: string, current: Json | undefined, body: Json) => {
     const changes = current ? delta(current, body) : body;
@@ -167,14 +182,21 @@ export function preview(s: Snapshot, ids: Record<string, string>): Json[] {
   for (const r of config.roles) symbolic[r.key] ??= '<' + r.key + '>';
   for (const c of config.categories) symbolic[c.key] ??= '<' + c.key + '>';
   for (const c of config.categories) for (const ch of c.channels) symbolic[ch.key] ??= '<' + ch.key + '>';
-  config.roles.forEach(r => add(r.name, s.roles.find(x => x.id === ids[r.key]), roleBody(r)));
-  add('@everyone', s.roles.find(x => x.id === s.guild.id), { permissions: bits(config.everyone) });
+  if (!categoryKeys) {
+    config.roles.forEach(r => add(r.name, s.roles.find(x => x.id === ids[r.key]), roleBody(r)));
+    add('@everyone', s.roles.find(x => x.id === s.guild.id), { permissions: bits(config.everyone) });
+  }
   config.categories.forEach((c, i) => {
+    if (categoryKeys && !categoryKeys.includes(c.key)) return;
     add(c.name, s.channels.find(x => x.id === ids[c.key]), { name: c.name, type: 4, position: i,
       permission_overwrites: overwrites(c, symbolic, s.guild.id) });
     c.channels.forEach((ch, j) => add(ch.name, s.channels.find(x => x.id === ids[ch.key]),
       { ...channelBody(ch, c, symbolic, s.guild.id), position: ch.type === 2 ? 0 : j }));
   });
+  if (categoryKeys) {
+    actions.push({ operation: 'verificar/ordenar', label: 'Inserir as categorias do lote na ordem aprovada; preservar configurações fora do lote.' });
+    return actions;
+  }
   add(config.status.name, s.channels.find(x => x.id === ids.status),
     { ...channelBody(config.status, undefined, symbolic, s.guild.id), position: 0 });
   add('Servidor', s.guild, guildBody(s, symbolic));
@@ -186,7 +208,7 @@ export function preview(s: Snapshot, ids: Record<string, string>): Json[] {
   return actions;
 }
 export async function apply(api: Transport, guildId: string, s: Snapshot, ids: Record<string, string>,
-  persist: () => Promise<void>, log: (x: Json) => void): Promise<void> {
+  persist: () => Promise<void>, log: (x: Json) => void, categoryKeys?: string[]): Promise<void> {
   async function upsert(key: string, label: string, collection: string, item: string, source: Json[], body: Json) {
     const current = source.find(x => x.id === ids[key]);
     if (current) {
@@ -201,39 +223,43 @@ export async function apply(api: Transport, guildId: string, s: Snapshot, ids: R
     }
   }
   const base = '/guilds/' + guildId;
-  for (const r of config.roles) await upsert(r.key, r.name, base + '/roles', base + '/roles/', s.roles, roleBody(r));
-  const everyone = s.roles.find(r => r.id === guildId)!;
-  const changes = delta(everyone, { permissions: bits(config.everyone) });
-  if (Object.keys(changes).length) await api.patch(base + '/roles/' + guildId, changes);
-  // Re-fetch after creations; raw positions may all be 1.
-  const currentRoles = await api.get(base + '/roles') as Json[];
-  const positions = rolePositionPlan(currentRoles, s.member.roles, ids, guildId);
-  if (positions.length) {
-    await api.patch(base + '/roles', positions);
-    const actual = await api.get(base + '/roles') as Json[];
-    const ordered = config.roles.map(r => actual.find(role => role.id === ids[r.key]));
-    if (ordered.some((r, i) => !r || i > 0 && compareRoles(ordered[i - 1]!, r) <= 0))
-      throw new Error('Discord não confirmou a ordem dos cargos; nenhuma categoria foi criada nesta tentativa.');
-    // Confirm the bot remains above the planned block too.
-    rolePositionPlan(actual, s.member.roles, ids, guildId);
-    log({ updated: 'Hierarquia dos cargos', tiedPositionsSupported: true });
+  if (!categoryKeys) {
+    for (const r of config.roles) await upsert(r.key, r.name, base + '/roles', base + '/roles/', s.roles, roleBody(r));
+    const everyone = s.roles.find(r => r.id === guildId)!;
+    const changes = delta(everyone, { permissions: bits(config.everyone) });
+    if (Object.keys(changes).length) await api.patch(base + '/roles/' + guildId, changes);
+    // Re-fetch after creations; raw positions may all be 1.
+    const currentRoles = await api.get(base + '/roles') as Json[];
+    const positions = rolePositionPlan(currentRoles, s.member.roles, ids, guildId);
+    if (positions.length) {
+      await api.patch(base + '/roles', positions);
+      const actual = await api.get(base + '/roles') as Json[];
+      const ordered = config.roles.map(r => actual.find(role => role.id === ids[r.key]));
+      if (ordered.some((r, i) => !r || i > 0 && compareRoles(ordered[i - 1]!, r) <= 0))
+        throw new Error('Discord não confirmou a ordem dos cargos; nenhuma categoria foi criada nesta tentativa.');
+      // Confirm the bot remains above the planned block too.
+      rolePositionPlan(actual, s.member.roles, ids, guildId);
+      log({ updated: 'Hierarquia dos cargos', tiedPositionsSupported: true });
+    }
   }
-  for (const c of config.categories) await upsert(c.key, c.name, base + '/channels', '/channels/', s.channels,
+  const selected = config.categories.filter(c => !categoryKeys || categoryKeys.includes(c.key));
+  for (const c of selected) await upsert(c.key, c.name, base + '/channels', '/channels/', s.channels,
     { name: c.name, type: 4, permission_overwrites: overwrites(c, ids, guildId) });
-  await upsert('status', config.status.name, base + '/channels', '/channels/', s.channels,
+  if (!categoryKeys) await upsert('status', config.status.name, base + '/channels', '/channels/', s.channels,
     channelBody(config.status, undefined, ids, guildId));
-  for (const c of config.categories) for (const ch of c.channels)
+  for (const c of selected) for (const ch of c.channels)
     await upsert(ch.key, ch.name, base + '/channels', '/channels/', s.channels, channelBody(ch, c, ids, guildId));
   // Parent changes were applied individually by upsert. Discord rejects multiple
   // parent_id fields in a bulk reorder (40009), even when their values are unchanged.
   const channelPositions = [
-    { id: ids.status, position: 0 },
+    ...(!categoryKeys ? [{ id: ids.status, position: 0 }] : []),
     ...config.categories.flatMap((c, i) => [
       { id: ids[c.key], position: i },
-      ...c.channels.map((ch, j) => ({ id: ids[ch.key], position: ch.type === 2 ? 0 : j }))
+      ...(!categoryKeys || categoryKeys.includes(c.key) ? c.channels.map((ch, j) => ({ id: ids[ch.key], position: ch.type === 2 ? 0 : j })) : [])
     ])
   ];
   await api.patch(base + '/channels', channelPositions);
+  if (categoryKeys) return;
   try {
     const body = guildBody(s, ids);
     const d = delta(s.guild, body);
