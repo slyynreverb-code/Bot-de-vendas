@@ -1,0 +1,30 @@
+{
+  "name": "destny-store-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.17.0"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts",
+    "build": "tsc --project tsconfig.build.json",
+    "start": "tsx src/bot.ts",
+    "start:prod": "node dist/bot.js",
+    "commands:register": "tsx src/register-commands.ts",
+    "setup:dry-run": "tsx src/setup.ts --dry-run",
+    "setup:apply": "tsx src/setup.ts --apply",
+    "setup:verify": "tsx src/setup.ts --verify",
+    "setup:additions": "tsx src/setup.ts --apply --categories-only",
+    "setup:additions:dry-run": "tsx src/setup.ts --dry-run --categories-only"
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "~5.9.3",
+    "tsx": "^4.20.0"
+  }
+}

@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+node_modules
+.state
+reports
+dist
+test
+docs
+Destny_Store_Prompt_Mestre_V16.txt
+*.log
