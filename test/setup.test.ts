@@ -9,6 +9,7 @@ import type { Snapshot, Transport } from '../src/modules/server-setup/engine.js'
 import { channelBody, guildBody, roleBody, ruleBodies, preflight, compareRoles, rolePositionPlan } from '../src/modules/server-setup/engine.js';
 
 const ids: Record<string, string> = {};
+const ticketBatch = ['category-ticket-purchases', 'category-ticket-services', 'category-ticket-support'];
 for (const r of config.roles) ids[r.key] = r.key;
 for (const c of config.categories) {
   ids[c.key] = c.key;
@@ -44,7 +45,7 @@ function allowed(overrides: Record<string, any>[], roleId: string, bit: bigint):
 }
 test('V16 quantidades, Unicode e restrições administrativas', () => {
   validateConfig();
-  assert.equal(config.categories.flatMap(c => c.channels).length + 1, 50);
+  assert.equal(config.categories.flatMap(c => c.channels).length + 1, 53);
   assert.equal(config.categories[2].channels[4].name, '「🗳️」ᴇɴQᴜᴇᴛᴇꜱ');
   assert.equal(config.categories.find(c => c.key === 'category-15')!.channels.length, 1);
   assert.equal(config.roles[2].permissions.includes('Administrator'), false);
@@ -174,12 +175,20 @@ test('Arquivos fica antes de Equipe e concede acesso explícito apenas a Owner',
   assert.ok(config.roles[1].permissions.includes('Administrator'));
 });
 
-test('Combos e Robux ficam após Loja, com Gamepass e leitura pública', () => {
-  const loja = config.categories.findIndex(c => c.key === 'category-04');
-  const combos = config.categories[loja + 1];
-  const robux = config.categories[loja + 2];
+test('Robux, Combos e Contas ficam consecutivos, com três combos e leitura pública', () => {
+  const avaliacoes = config.categories.findIndex(c => c.key === 'category-06');
+  assert.deepEqual(config.categories.slice(avaliacoes + 1, avaliacoes + 4).map(c => c.key), [
+    'category-robux', 'category-combos', 'category-07',
+  ]);
+  const robux = config.categories[avaliacoes + 1];
+  const combos = config.categories[avaliacoes + 2];
   assert.equal(combos.name, '🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦');
-  assert.equal(combos.channels.length, 0);
+  assert.deepEqual(combos.channels.map(channel => ({ key: channel.key, name: channel.name, type: channel.type, position: channel.position })), [
+    { key: 'channel-combos-evolution', name: '「📈」ᴇᴠᴏʟᴜᴄᴀᴏ', type: 0, position: 0 },
+    { key: 'channel-combos-equipment', name: '「⚔️」ᴇqᴜɪᴘᴀᴍᴇɴᴛᴏꜱ', type: 0, position: 1 },
+    { key: 'channel-combos-farm', name: '「👹」ꜰᴀʀᴍ', type: 0, position: 2 },
+  ]);
+  assert.deepEqual(config.categoryBatch, ['category-combos']);
   assert.equal(robux.name, '💸 • 𝗥𝗢𝗕𝗨𝗫');
   assert.equal(robux.channels.length, 1);
   assert.equal(robux.channels[0].name, '「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ');
@@ -210,7 +219,7 @@ test('Tickets antigo permanece após os três novos destinos e privado para a eq
   assert.equal(config.categories.at(-1)!.key, 'category-15');
 });
 
-test('lote adiciona somente as três categorias e Gamepass, preserva o restante e pode ser repetido', async () => {
+test('lote explícito de Combos, Robux e Tickets cria os canais previstos e pode ser repetido', async () => {
   const s = fixture();
   const batch = ['category-combos', 'category-robux', 'category-tickets'];
   const batchCategories = config.categories.filter(c => batch.includes(c.key));
@@ -257,16 +266,16 @@ test('lote adiciona somente as três categorias e Gamepass, preserva o restante 
   };
   let saved = 0;
   await apply(api, 'guild', s, liveIds, async () => { saved++; }, () => {}, batch);
-  assert.equal(saved, 4);
-  assert.equal(created.length, 4);
+  assert.equal(saved, 7);
+  assert.equal(created.length, 7);
   assert.deepEqual(inspect(s, liveIds, batch), []);
   assert.equal(JSON.stringify({ guild: s.guild, roles: s.roles, rules: s.rules, chat }), untouched);
   assert.deepEqual(s.channels.find(c => c.id === ids['channel-robux-gamepass'])!.permission_overwrites,
     overwrites(batchCategories.find(c => c.key === 'category-robux')!, liveIds, 'guild'));
   preflight(s, liveIds, batch);
   await apply(api, 'guild', s, liveIds, async () => { saved++; }, () => {}, batch);
-  assert.equal(created.length, 4);
-  assert.equal(saved, 4);
+  assert.equal(created.length, 7);
+  assert.equal(saved, 7);
   assert.deepEqual(inspect(s, liveIds, batch), []);
   assert.equal(JSON.stringify({ guild: s.guild, roles: s.roles, rules: s.rules, chat }), untouched);
 });
@@ -289,7 +298,7 @@ test('Compras, Serviços e Suporte são destinos vazios e privados após Atendim
   assert.deepEqual(destinations.map(c => c.name), [
     '💳 • 𝗖𝗢𝗠𝗣𝗥𝗔𝗦', '📝 • 𝗦𝗘𝗥𝗩𝗜𝗖𝗢𝗦', '🛠️ • 𝗦𝗨𝗣𝗢𝗥𝗧𝗘',
   ]);
-  assert.deepEqual(destinations.map(c => c.key), config.categoryBatch);
+  assert.deepEqual(destinations.map(c => c.key), ticketBatch);
   for (const category of destinations) {
     assert.equal(category.channels.length, 0);
     const ow = overwrites(category, ids, 'guild');
@@ -304,7 +313,7 @@ test('Compras, Serviços e Suporte são destinos vazios e privados após Atendim
 
 async function simulateTicketDestinations(optionalAdditionsMissing = false) {
   const s = fixture();
-  const batch = config.categoryBatch;
+  const batch = ticketBatch;
   const destinations = config.categories.filter(c => batch.includes(c.key));
   const excludedKeys = [...batch, ...(optionalAdditionsMissing ? ['category-combos', 'category-robux', 'category-tickets'] : [])];
   const excluded = config.categories.filter(c => excludedKeys.includes(c.key)).flatMap(c => [c, ...c.channels]);

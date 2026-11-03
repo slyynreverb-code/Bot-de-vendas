@@ -2,9 +2,17 @@
 
 O comando `/servidor atualizar` reaproveita o configurador de categorias do projeto. Ele consulta a estrutura, apresenta uma prévia privada e aguarda a confirmação de quem abriu essa prévia. Só então aplica o lote aprovado em `config.categoryBatch`.
 
-O lote atual contém **Compras, Serviços e Suporte**. O comando não executa a aplicação completa do V16: preserva o nome KAMUI, cargos, AutoMod e as configurações de canais fora do lote. A ordenação das categorias planejadas presentes é incluída na prévia. Não exclui canais nem conteúdos, não transfere tickets e não configura o Ticket King.
+O lote atual contém somente **Combos** (`config.categoryBatch = ['category-combos']`) e prepara estes três canais de texto:
 
-Os três canais propostos para Combos e a mudança de posição de Robux/Combos ainda não foram autorizados para criação e permanecem fora desta alteração.
+- `「📈」ᴇᴠᴏʟᴜᴄᴀᴏ`: combos de level e maestria.
+- `「⚔️」ᴇqᴜɪᴘᴀᴍᴇɴᴛᴏꜱ`: combos de armas e acessórios.
+- `「👹」ꜰᴀʀᴍ`: pacotes de farm de chefes, Yetis e materiais.
+
+A sequência da área de produtos será **Robux → Combos → Contas**, imediatamente após Avaliações. Robux e Contas mantêm suas identidades e recebem apenas o ajuste de posição. A ordenação das categorias planejadas presentes aparece na prévia.
+
+O comando não executa a aplicação completa do V16: preserva o nome KAMUI, cargos, AutoMod, Gamepass, tickets e as configurações de categorias/canais fora de Combos. Não exclui canais nem conteúdos, não transfere tickets e não configura o Ticket King. Os novos canais são criados vazios, sem painéis ou mensagens de venda.
+
+O planejamento passa a **22 categorias, 53 canais permanentes e 26 cargos**, incluindo o canal avulso de status e excluindo tickets dinâmicos. Essa é a configuração preparada no projeto; a criação no Discord acontece somente depois de confirmar a prévia.
 
 ## Variáveis de ambiente
 
@@ -49,6 +57,17 @@ npm start
 ~~~
 
 O projeto exige Node.js 24.17.0 ou superior. O registro publica o comando somente no servidor configurado e preserva comandos de outros nomes. Registrar não cria categorias ou canais.
+
+## Atualizar o bot já instalado no Codespace
+
+Se `/servidor atualizar` já está registrado, o lote de Combos não exige novo registro nem novas dependências. No terminal do bot, pressione **Ctrl+C** e execute, na branch `destny/estrutura-v16`:
+
+~~~bash
+git pull --ff-only
+npm start
+~~~
+
+Quando o bot estiver online, execute `/servidor atualizar` no Discord e confira uma nova prévia. Uma prévia aberta antes do reinício não pode ser reutilizada. A atualização do código e a aplicação das alterações no servidor são etapas separadas.
 
 Se o comando não aparecer, confira o ID do servidor, o resultado do registro e o acesso do usuário nas Integrações. A aplicação precisa estar instalada com os escopos `bot` e `applications.commands`. No Developer Portal, o gerador de convites fica em **OAuth2 → URL Generator**. Não habilite intents privilegiados para esta funcionalidade: apenas Guilds é usado.
 

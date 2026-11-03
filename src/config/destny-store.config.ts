@@ -384,37 +384,6 @@ export const config = {
       }
     },
     {
-      "key": "category-combos",
-      "name": "🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦",
-      "channels": [],
-      "position": 5,
-      "access": "read",
-      "staff": {
-        "admin": "publish",
-        "moderator": "inherit",
-        "attendant": "publish"
-      }
-    },
-    {
-      "key": "category-robux",
-      "name": "💸 • 𝗥𝗢𝗕𝗨𝗫",
-      "channels": [
-        {
-          "key": "channel-robux-gamepass",
-          "name": "「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ",
-          "type": 0,
-          "position": 0
-        }
-      ],
-      "position": 6,
-      "access": "read",
-      "staff": {
-        "admin": "publish",
-        "moderator": "inherit",
-        "attendant": "publish"
-      }
-    },
-    {
       "key": "category-05",
       "name": "🎫 • 𝗔𝗧𝗘𝗡𝗗𝗜𝗠𝗘𝗡𝗧𝗢",
       "channels": [
@@ -431,7 +400,7 @@ export const config = {
           "position": 1
         }
       ],
-      "position": 7,
+      "position": 5,
       "access": "read",
       "staff": {
         "admin": "publish",
@@ -443,7 +412,7 @@ export const config = {
       "key": "category-ticket-purchases",
       "name": "💳 • 𝗖𝗢𝗠𝗣𝗥𝗔𝗦",
       "channels": [],
-      "position": 8,
+      "position": 6,
       "access": "hidden",
       "staff": {
         "admin": "publish",
@@ -455,7 +424,7 @@ export const config = {
       "key": "category-ticket-services",
       "name": "📝 • 𝗦𝗘𝗥𝗩𝗜𝗖𝗢𝗦",
       "channels": [],
-      "position": 9,
+      "position": 7,
       "access": "hidden",
       "staff": {
         "admin": "publish",
@@ -467,7 +436,7 @@ export const config = {
       "key": "category-ticket-support",
       "name": "🛠️ • 𝗦𝗨𝗣𝗢𝗥𝗧𝗘",
       "channels": [],
-      "position": 10,
+      "position": 8,
       "access": "hidden",
       "staff": {
         "admin": "publish",
@@ -479,7 +448,7 @@ export const config = {
       "key": "category-tickets",
       "name": "🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦",
       "channels": [],
-      "position": 11,
+      "position": 9,
       "access": "hidden",
       "staff": {
         "admin": "publish",
@@ -502,6 +471,56 @@ export const config = {
           "name": "「📦」ᴇɴᴛʀᴇɢᴀꜱ",
           "type": 0,
           "position": 1
+        }
+      ],
+      "position": 10,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-robux",
+      "name": "💸 • 𝗥𝗢𝗕𝗨𝗫",
+      "channels": [
+        {
+          "key": "channel-robux-gamepass",
+          "name": "「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ",
+          "type": 0,
+          "position": 0
+        }
+      ],
+      "position": 11,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-combos",
+      "name": "🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦",
+      "channels": [
+        {
+          "key": "channel-combos-evolution",
+          "name": "「📈」ᴇᴠᴏʟᴜᴄᴀᴏ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-combos-equipment",
+          "name": "「⚔️」ᴇqᴜɪᴘᴀᴍᴇɴᴛᴏꜱ",
+          "type": 0,
+          "position": 1
+        },
+        {
+          "key": "channel-combos-farm",
+          "name": "「👹」ꜰᴀʀᴍ",
+          "type": 0,
+          "position": 2
         }
       ],
       "position": 12,
@@ -896,8 +915,6 @@ export const config = {
     }
   ],
   "categoryBatch": [
-    "category-ticket-purchases",
-    "category-ticket-services",
-    "category-ticket-support"
+    "category-combos"
   ]
 };

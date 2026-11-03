@@ -19,7 +19,7 @@ const clone = <T>(value: T): T => structuredClone(value);
 
 interface Call { method: 'GET' | 'POST' | 'PATCH'; path: string; body?: Json | Json[] }
 
-function fixture(missingBatch = false) {
+function fixture(missingBatch: boolean | 'children' = false) {
   const ids: Record<string, string> = { status: '1700000000000000100' };
   config.roles.forEach((role, index) => { ids[role.key] = String(1700000000000000200n + BigInt(index)); });
   let nextChannel = 1700000000000001000n;
@@ -53,13 +53,22 @@ function fixture(missingBatch = false) {
     .push(access(externalBotRoleId, 'publish'));
   s.channels.find(channel => channel.id === ids['channel-03-1'])!.permission_overwrites
     .push(access(externalBotRoleId, 'publish'));
+  if (!config.categoryBatch.includes('category-robux')) {
+    s.channels.find(channel => channel.id === ids['category-robux'])!.permission_overwrites
+      .push(access(externalBotRoleId, 'publish'));
+    s.channels.find(channel => channel.id === ids['channel-robux-gamepass'])!.permission_overwrites
+      .push(access(externalBotRoleId, 'publish'));
+  }
   s.channels.push({ id: existingTicketId, name: 'atendimento-em-andamento', type: 0, position: 0,
     parent_id: ids['category-tickets'],
     permission_overwrites: [{ id: customerId, type: 1, allow: bits(['ViewChannel']), deny: '0' }] });
 
   if (missingBatch) {
     const removed = new Set(config.categories.filter(category => config.categoryBatch.includes(category.key))
-      .flatMap(category => [ids[category.key], ...category.channels.map(channel => ids[channel.key])]));
+      .flatMap(category => [
+        ...(missingBatch === true ? [ids[category.key]] : []),
+        ...category.channels.map(channel => ids[channel.key]),
+      ]));
     s.channels = s.channels.filter(channel => !removed.has(channel.id));
     s.channels.filter(channel => channel.type === 4).forEach((channel, index) => { channel.position = index; });
   }
@@ -96,13 +105,21 @@ function fakeTransport(s: Snapshot, ids: Record<string, string>) {
       calls.push({ method: 'POST', path, body: clone(body) });
       postCount++;
       assert.equal(path, '/guilds/' + guildId + '/channels');
-      assert.equal(body.type, 4, 'O lote atual cria somente três categorias de tickets');
-      const category = config.categories.find(entry => config.categoryBatch.includes(entry.key) && entry.name === body.name);
+      const selected = config.categories.filter(category => config.categoryBatch.includes(category.key));
+      const category = body.type === 4
+        ? selected.find(entry => entry.name === body.name)
+        : selected.find(entry => ids[entry.key] === body.parent_id);
       assert.ok(category, 'Nenhum elemento fora do lote pode ser criado');
+      const entry = body.type === 4 ? category
+        : category.channels.find(channel => channel.name === body.name && channel.type === body.type);
+      assert.ok(entry, 'Canal filho precisa pertencer à categoria aprovada');
+      if (body.type !== 4) assert.ok(s.channels.some(channel => channel.id === body.parent_id && channel.type === 4));
       if (beforePost) await beforePost();
       if (postCount === failOnPost) throw new Error('Falha simulada antes da criação remota');
-      assert.equal(s.channels.some(channel => channel.id === ids[category.key]), false, 'Não duplicar categoria');
-      const value = { id: ids[category.key], ...clone(body), position: s.channels.filter(channel => channel.type === 4).length };
+      assert.equal(s.channels.some(channel => channel.id === ids[entry.key]), false, 'Não duplicar categoria ou canal');
+      const position = body.type === 4 ? s.channels.filter(channel => channel.type === 4).length
+        : s.channels.filter(channel => channel.parent_id === body.parent_id && channel.type === body.type).length;
+      const value = { id: ids[entry.key], ...clone(body), position };
       s.channels.push(value);
       created.push(clone(value));
       return clone(value);
@@ -140,7 +157,7 @@ function fakeTransport(s: Snapshot, ids: Record<string, string>) {
   };
 }
 
-async function environment(t: TestContext, missingBatch = false) {
+async function environment(t: TestContext, missingBatch: boolean | 'children' = false) {
   const directory = await mkdtemp(join(tmpdir(), 'kamui-update-service-'));
   t.after(async () => { await rm(directory, { recursive: true, force: true }); });
   const options = { stateDir: join(directory, '.state'), reportsDir: join(directory, 'reports') };
@@ -159,16 +176,16 @@ function preservedSettings(s: Snapshot, ids: Record<string, string>) {
 }
 
 test('prévia do comando lê o lote aprovado sem escrever no Discord ou no disco', async t => {
-  const env = await environment(t, true);
+  const env = await environment(t, 'children');
   const before = clone(env.s);
   const plan = await env.service.preview();
   assert.equal(plan.guildId, guildId);
   assert.deepEqual(plan.scope, config.categoryBatch);
   const creations = plan.actions.filter(action => action.operation === 'criar');
   assert.deepEqual(creations.map(action => action.label),
-    config.categories.filter(category => config.categoryBatch.includes(category.key)).map(category => category.name));
+    config.categories.filter(category => config.categoryBatch.includes(category.key)).flatMap(category => category.channels.map(channel => channel.name)));
   assert.equal(creations.length, 3);
-  assert.ok(creations.every(action => action.changes.type === 4));
+  assert.ok(creations.every(action => action.changes.type === 0 && action.changes.parent_id === env.ids['category-combos']));
   assert.equal(typeof plan.fingerprint, 'string');
   assert.ok(plan.fingerprint.length > 0);
   assert.deepEqual(env.s, before);
@@ -177,16 +194,39 @@ test('prévia do comando lê o lote aprovado sem escrever no Discord ou no disco
   await assert.rejects(stat(env.options.reportsDir), { code: 'ENOENT' });
 });
 
-test('aplicar pelo comando preserva KAMUI, tickets e permissões externas; repetir não altera nada', async t => {
-  const env = await environment(t, true);
+test('lote Combos cria três canais e ordena Robux → Combos → Contas preservando Gamepass e tickets', async t => {
+  const env = await environment(t, 'children');
+  assert.deepEqual(config.categoryBatch, ['category-combos']);
+  const oldOrder = config.categories.filter(category => !['category-combos', 'category-robux'].includes(category.key));
+  const loja = oldOrder.findIndex(category => category.key === 'category-04');
+  oldOrder.splice(loja + 1, 0,
+    config.categories.find(category => category.key === 'category-combos')!,
+    config.categories.find(category => category.key === 'category-robux')!);
+  oldOrder.forEach((category, index) => { env.s.channels.find(channel => channel.id === env.ids[category.key])!.position = index; });
   const retained = preservedSettings(env.s, env.ids);
+  const originalGamepass = clone(env.s.channels.find(channel => channel.id === env.ids['channel-robux-gamepass'])!);
+  const originalComboId = env.ids['category-combos'];
   const plan = await env.service.preview();
+  assert.equal(plan.actions.filter(action => action.operation === 'criar').length, 3);
+  assert.ok(plan.actions.some(action => action.operation === 'ordenar'));
   const result = await env.service.apply(plan.fingerprint, actorId);
   assert.deepEqual(result.issues, []);
   assert.equal(env.created.length, 3);
+  assert.deepEqual(env.created.map(channel => channel.name), [
+    '「📈」ᴇᴠᴏʟᴜᴄᴀᴏ', '「⚔️」ᴇqᴜɪᴘᴀᴍᴇɴᴛᴏꜱ', '「👹」ꜰᴀʀᴍ',
+  ]);
+  assert.ok(env.created.every(channel => channel.type === 0 && channel.parent_id === originalComboId));
+  assert.equal(env.s.channels.filter(channel => channel.id === originalComboId).length, 1);
+  const productOrder = ['category-robux', 'category-combos', 'category-07'].map(key =>
+    env.s.channels.find(channel => channel.id === env.ids[key])!.position);
+  assert.equal(productOrder[1], productOrder[0] + 1);
+  assert.equal(productOrder[2], productOrder[1] + 1);
+  assert.deepEqual(env.s.channels.find(channel => channel.id === env.ids['channel-robux-gamepass']), originalGamepass);
   assert.deepEqual(preservedSettings(env.s, env.ids), retained);
   const saved = JSON.parse(await readFile(join(env.options.stateDir, guildId + '.json'), 'utf8'));
   for (const key of config.categoryBatch) assert.equal(saved[key], env.ids[key]);
+  for (const channel of config.categories.find(category => category.key === 'category-combos')!.channels)
+    assert.equal(saved[channel.key], env.ids[channel.key]);
   const second = await env.service.preview();
   assert.deepEqual(second.actions, [], 'Tudo já atualizado deve produzir uma prévia vazia');
   const beforeRepeat = env.mutations().length;
@@ -274,27 +314,31 @@ test('duas instâncias não aplicam ao mesmo tempo e a trava é liberada ao conc
   await assert.rejects(stat(join(env.options.stateDir, guildId + '.lock')), { code: 'ENOENT' });
 });
 
-test('falha parcial preserva IDs e retomada não duplica nem perde categoria renomeada', async t => {
+test('falha parcial preserva IDs de categoria e canal e retoma sem duplicar elementos renomeados', async t => {
   const env = await environment(t, true);
-  env.failPost(2);
+  env.failPost(3);
   const plan = await env.service.preview();
   await assert.rejects(env.service.apply(plan.fingerprint, actorId));
-  assert.equal(env.created.length, 1);
+  assert.equal(env.created.length, 2);
   const firstKey = config.categoryBatch[0];
+  const firstChannel = config.categories.find(category => category.key === firstKey)!.channels[0];
   const saved = JSON.parse(await readFile(join(env.options.stateDir, guildId + '.json'), 'utf8'));
   assert.equal(saved[firstKey], env.ids[firstKey]);
+  assert.equal(saved[firstChannel.key], env.ids[firstChannel.key]);
   await assert.rejects(stat(join(env.options.stateDir, guildId + '.lock')), { code: 'ENOENT' });
   env.s.channels.find(channel => channel.id === env.ids[firstKey])!.name = 'Categoria parcial renomeada';
+  env.s.channels.find(channel => channel.id === env.ids[firstChannel.key])!.name = 'Canal parcial renomeado';
   env.failPost(undefined);
   const restarted = new ServerUpdateService(env.api, guildId, env.options);
   const remaining = await restarted.preview();
   assert.equal(remaining.actions.filter(action => action.operation === 'criar').length, 2);
   const result = await restarted.apply(remaining.fingerprint, actorId);
   assert.deepEqual(result.issues, []);
-  assert.equal(env.created.length, 3);
-  assert.equal(new Set(env.created.map(channel => channel.id)).size, 3);
+  assert.equal(env.created.length, 4);
+  assert.equal(new Set(env.created.map(channel => channel.id)).size, 4);
   assert.equal(env.s.channels.find(channel => channel.id === env.ids[firstKey])!.name,
     config.categories.find(category => category.key === firstKey)!.name);
+  assert.equal(env.s.channels.find(channel => channel.id === env.ids[firstChannel.key])!.name, firstChannel.name);
 });
 
 test('sobrescrita desconhecida dentro do lote bloqueia a prévia, sem tocar a integração', async t => {
@@ -330,11 +374,11 @@ test('falha ao verificar após aplicar substitui sucesso antigo por relatório s
     requestBody: { headers: { Authorization: sensitive } },
   });
   env.setBeforePost(async () => {
-    // No more reads occur between category creation and the final snapshot.
+    // No more reads occur between category/channel creation and the final snapshot.
     env.failNextGet('/guilds/' + guildId, verificationFailure);
   });
   await assert.rejects(env.service.apply(plan.fingerprint, actorId));
-  assert.equal(env.created.length, 3, 'A verificação falhou depois das criações');
+  assert.equal(env.created.length, 4, 'A verificação falhou depois das criações da categoria e seus três canais');
   assert.ok(env.mutations().some(call => call.method === 'PATCH' && call.path === '/guilds/' + guildId + '/channels'));
   const reportText = await readFile(reportPath, 'utf8');
   const report = JSON.parse(reportText);

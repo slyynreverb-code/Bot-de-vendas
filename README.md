@@ -1,6 +1,6 @@
 # KAMUI — configurador do servidor e comando administrativo
 
-Projeto modular com o mesmo aplicativo e token do bot já criado. O planejamento existente contém 22 categorias, 50 canais permanentes e 26 cargos. O configurador pelo terminal continua disponível e encerra ao terminar. O novo módulo `/servidor atualizar` mantém o bot conectado para apresentar uma prévia privada e aplicar o lote de categorias aprovado, após confirmação no Discord.
+Projeto modular com o mesmo aplicativo e token do bot já criado. O planejamento atual contém 22 categorias, 53 canais permanentes e 26 cargos. O configurador pelo terminal continua disponível e encerra ao terminar. O módulo `/servidor atualizar` mantém o bot conectado para apresentar uma prévia privada e aplicar o lote de categorias aprovado, após confirmação no Discord.
 
 Não implementa vendas, pagamentos, carrinho ou automação de tickets. O comando administrativo preserva o nome atual do servidor e as configurações fora do lote. As instruções de ativação estão em [Comando de atualização no Discord](#comando-de-atualização-no-discord) e no [guia completo](docs/discord-update.md).
 
@@ -77,7 +77,7 @@ src/modules/discord-update concentra autorização, prévias e aplicação do lo
 
 Módulos futuros poderão usar o mesmo aplicativo e token, sem alterar a identidade do bot. Nenhum módulo comercial antecipado foi criado.
 
-Fonte de verdade: Destny_Store_Prompt_Mestre_V16.txt.
+Fonte da base V16: Destny_Store_Prompt_Mestre_V16.txt. As alterações aprovadas posteriormente estão na configuração do projeto e nas seções abaixo.
 
 ## Alterações aprovadas após o V16
 
@@ -87,15 +87,15 @@ Fonte de verdade: Destny_Store_Prompt_Mestre_V16.txt.
 - Cofundador mantém Administrator, conforme o planejamento. Por limitação nativa do Discord, qualquer membro com Administrator (incluindo Cofundador e o bot) e o proprietário real podem ver Arquivos. Remover esse privilégio global exige uma decisão separada.
 - Os canais são criados vazios, sem enviar imagens ou textos. Links de anexos Discord podem expirar; não são uma hospedagem permanente.
 
-## Adições: Combos, Robux e Tickets
+## Histórico: adições de Combos, Robux e Tickets
 
-- `🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦`: vazia por enquanto, logo após Loja.
-- `💸 • 𝗥𝗢𝗕𝗨𝗫`: logo após Combos, com o único canal `「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ`.
+- `🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦` foi incluída inicialmente vazia, após Loja. Seus novos canais e sua posição atual estão descritos no lote de Combos abaixo.
+- `💸 • 𝗥𝗢𝗕𝗨𝗫` foi incluída com o único canal `「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ` e agora ocupa a primeira posição da área de produtos.
 - Combos e Robux permitem leitura pública e publicação para Administrador/Atendente, além do acesso nativo de Owner/Cofundador.
 - `🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦`: vazia, logo após Atendimento; oculta para membros comuns e acessível à equipe autorizada. O sistema de tickets externo deve conceder acesso ao cliente em cada canal criado. O configurador não cria tickets nem altera canais de atendimento futuros.
 - Após esse lote, o planejamento passou a **19 categorias, 50 canais permanentes e 26 cargos**. Monitoramento continua em último lugar entre as categorias planejadas.
 
-O lote ativo foi atualizado para os três destinos específicos de tickets descritos abaixo. Para simular e aplicar o lote ativo:
+As categorias desses lotes anteriores permanecem no planejamento. Para simular e aplicar o lote ativo, atualmente Combos e a organização das categorias:
 
 ~~~bash
 npm run setup:additions:dry-run
@@ -106,9 +106,9 @@ O segundo comando exige a confirmação `APLICAR ID` no terminal. Mantém o nome
 
 O comando original `setup:apply` continua sendo uma reaplicação completa do planejamento, inclusive do nome definido em `config.name`.
 
-## Destinos separados por tipo de ticket
+## Histórico: destinos separados por tipo de ticket
 
-O lote ativo de `setup:additions` cria ou atualiza exclusivamente estas três categorias privadas, logo após Atendimento e nesta ordem:
+O planejamento anterior adicionou estas três categorias privadas, logo após Atendimento e nesta ordem:
 
 - `💳 • 𝗖𝗢𝗠𝗣𝗥𝗔𝗦`: destino de Compras e pagamentos.
 - `📝 • 𝗦𝗘𝗥𝗩𝗜𝗖𝗢𝗦`: destino de Serviços personalizados.
@@ -118,13 +118,29 @@ As três começam vazias. A equipe autorizada pode visualizar e publicar; `@ever
 
 A categoria antiga `🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦`, suas permissões e os tickets existentes ficam preservados. Nenhum ticket é transferido, encerrado ou apagado. No painel do Ticket King, selecione o destino correspondente para cada uma das três opções. O configurador não altera a integração externa.
 
-Total atual planejado: **22 categorias, 50 canais permanentes e 26 cargos**. Os canais criados pelo Ticket King são dinâmicos e não entram nessa contagem permanente.
+Antes dos três canais de Combos, o planejamento continha **22 categorias, 50 canais permanentes e 26 cargos**. Os canais criados pelo Ticket King são dinâmicos e não entram nessa contagem permanente.
+
+Esses destinos e os tickets existentes ficam fora do lote atual de Combos; suas configurações não são reaplicadas por ele.
+
+## Lote atual: Combos e ordem dos produtos
+
+`config.categoryBatch` contém somente `category-combos`. O lote cria ou atualiza a categoria `🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦` e seus três canais de texto:
+
+- `「📈」ᴇᴠᴏʟᴜᴄᴀᴏ`: combos de level e maestria.
+- `「⚔️」ᴇqᴜɪᴘᴀᴍᴇɴᴛᴏꜱ`: combos de armas e acessórios.
+- `「👹」ꜰᴀʀᴍ`: pacotes de farm de chefes, Yetis e materiais.
+
+A ordem aprovada é **Avaliações → Robux → Combos → Contas**, seguida por Farm, Armas, Acessórios, XP e Materiais. Robux é a primeira categoria da área de produtos, não a primeira do servidor. A prévia inclui a ordenação das categorias planejadas presentes.
+
+Robux e Contas são reposicionadas usando suas identidades existentes. Gamepass, tickets, cargos, AutoMod, nome KAMUI e permissões de categorias/canais fora de Combos ficam preservados. Não há criação de painéis ou mensagens de venda: os três canais são criados vazios.
+
+Total atual planejado: **22 categorias, 53 canais permanentes e 26 cargos**, incluindo o canal avulso de status e excluindo os tickets dinâmicos. A aplicação no servidor exige a confirmação da prévia pelo operador.
 
 O lote exige os cargos da equipe e as categorias Loja/Atendimento existentes. Outras adições ainda ausentes ficam pendentes de uma execução completa; não bloqueiam este lote e não são criadas por ele. A ordenação e a validação do lote consideram as categorias efetivamente presentes, mantendo Monitoramento no fim da sequência planejada. `setup:apply` continua sendo uma reaplicação completa, incluindo nome e configurações gerais.
 
 ## Comando de atualização no Discord
 
-O comando `/servidor atualizar` usa exclusivamente o lote definido em `config.categoryBatch`. Nesta versão, o lote continua sendo **Compras, Serviços e Suporte**. Os três novos canais de Combos e a ordem Robux → Combos → Contas ainda dependem da autorização solicitada pelo usuário; não foram adicionados nesta implementação.
+O comando `/servidor atualizar` usa exclusivamente o lote definido em `config.categoryBatch`. Nesta versão, ele prepara os **três canais de Combos** e a ordem **Robux → Combos → Contas**, conforme o lote atual descrito acima.
 
 Pode usar o comando quem for o dono real do servidor, tiver o cargo Owner identificado pelo ID aprovado ou possuir a permissão nativa **Administrator**. O ID de Owner vem de `DISCORD_OWNER_ROLE_ID`, quando configurado, ou de `role-1` no arquivo `.state/ID_DO_SERVIDOR.json`. Nomes de cargos não concedem autorização. O comando confere o acesso novamente ao clicar em Aplicar.
 
@@ -140,6 +156,8 @@ npm start
 ~~~
 
 O registro cria ou atualiza somente o comando `servidor`; preserva outros comandos do aplicativo. Ele não aplica mudanças na estrutura. Use `/servidor atualizar` no servidor configurado, revise a prévia privada e clique em **Aplicar** ou **Cancelar**. A confirmação vale por cinco minutos e pertence à pessoa que solicitou a prévia. Mudanças no plano ou reinício do bot exigem uma nova prévia.
+
+Se o comando já está registrado, esta atualização não exige novo registro nem novas dependências. No Codespace, pare o bot com **Ctrl+C**, execute `git pull --ff-only` e depois `npm start`. Aguarde o bot ficar online e solicite uma nova prévia com `/servidor atualizar` antes de aplicar.
 
 O comando fica disponível por padrão para administradores. Se um cargo Owner não tiver Administrator, libere esse cargo também em **Configurações do servidor → Integrações → aplicativo do bot → comando servidor**. A autorização por ID continua obrigatória dentro do bot. A aplicação deve ter os escopos `bot` e `applications.commands`; o runtime usa apenas o intent Guilds, sem intents privilegiados.
 
