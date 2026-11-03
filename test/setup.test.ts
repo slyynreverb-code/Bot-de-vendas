@@ -103,7 +103,17 @@ test('dry-run é puro e rerun não cria entidades nem escreve mensagens', async 
   const api: Transport = {
     get: async path => { assert.equal(path, '/guilds/guild/roles'); return s.roles; },
     post: async () => { assert.fail('Nenhuma criação esperada em servidor configurado'); },
-    patch: async (path) => { calls.push(path); return {}; },
+    patch: async (path, body) => {
+      calls.push(path);
+      assert.equal(path, '/guilds/guild/channels');
+      assert.ok(Array.isArray(body));
+      // Discord 40009: bulk reordering must never resubmit parent changes.
+      for (const item of body) {
+        assert.deepEqual(Object.keys(item).sort(), ['id', 'position']);
+        assert.equal(Object.hasOwn(item, 'parent_id'), false);
+      }
+      return {};
+    },
   };
   for (let i = 0; i < 2; i++) await apply(api, 'guild', s, { ...ids }, async () => {}, () => {});
   assert.deepEqual(calls, ['/guilds/guild/channels', '/guilds/guild/channels']);

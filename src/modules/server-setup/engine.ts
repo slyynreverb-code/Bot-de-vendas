@@ -224,11 +224,13 @@ export async function apply(api: Transport, guildId: string, s: Snapshot, ids: R
     channelBody(config.status, undefined, ids, guildId));
   for (const c of config.categories) for (const ch of c.channels)
     await upsert(ch.key, ch.name, base + '/channels', '/channels/', s.channels, channelBody(ch, c, ids, guildId));
+  // Parent changes were applied individually by upsert. Discord rejects multiple
+  // parent_id fields in a bulk reorder (40009), even when their values are unchanged.
   const channelPositions = [
-    { id: ids.status, position: 0, parent_id: null },
+    { id: ids.status, position: 0 },
     ...config.categories.flatMap((c, i) => [
       { id: ids[c.key], position: i },
-      ...c.channels.map((ch, j) => ({ id: ids[ch.key], position: ch.type === 2 ? 0 : j, parent_id: ids[c.key] }))
+      ...c.channels.map((ch, j) => ({ id: ids[ch.key], position: ch.type === 2 ? 0 : j }))
     ])
   ];
   await api.patch(base + '/channels', channelPositions);
