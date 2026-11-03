@@ -1,10 +1,11 @@
 import { REST } from 'discord.js';
-import { mkdir, open, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdir, open, rm, writeFile } from 'node:fs/promises';
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
 import { config } from './config/destny-store.config.js';
 import { validateConfig, type Json } from './modules/server-setup/policy.js';
 import { apply, inspect, preflight, preview, resolve, snapshot, type Transport } from './modules/server-setup/engine.js';
+import { persistState, readState, UpdateError } from './modules/server-setup/storage.js';
 
 const logs: Json[] = [];
 const log = (event: Json) => { logs.push(event); console.log(JSON.stringify(event, null, 2)); };
@@ -29,10 +30,7 @@ async function main() {
     post: (path, body) => rest.post(path as `/${string}`, { body, reason: 'Destny Store V16: estrutura aprovada' }),
     patch: (path, body) => rest.patch(path as `/${string}`, { body, reason: 'Destny Store V16: estrutura aprovada' }),
   };
-  const statePath = '.state/' + guildId + '.json';
-  let state: Record<string, string> = {};
-  try { state = JSON.parse(await readFile(statePath, 'utf8')); }
-  catch (e) { if ((e as NodeJS.ErrnoException).code !== 'ENOENT') throw new Error('Estado local inválido; preserve o arquivo e revise.'); }
+  const state = await readState(guildId);
   const before = await snapshot(api, guildId);
   const ids = resolve(before, state);
   preflight(before, ids, categoryKeys);
@@ -54,13 +52,13 @@ async function main() {
     await lock.close();
     // Check again after confirmation to avoid applying against stale Discord data.
     const fresh = await snapshot(api, guildId);
-    const freshIds = resolve(fresh, state);
+    // A Discord update may have persisted new identities while the terminal
+    // operator was reading the preview. Reload only after taking the same lock.
+    const freshIds = resolve(fresh, await readState(guildId));
     preflight(fresh, freshIds, categoryKeys);
+    for (const key of Object.keys(ids)) delete ids[key];
     Object.assign(ids, freshIds);
-    const persist = async () => {
-      await writeFile(statePath + '.tmp', JSON.stringify(ids, null, 2), { mode: 0o600 });
-      await rename(statePath + '.tmp', statePath);
-    };
+    const persist = () => persistState(guildId, ids);
     await persist();
     await apply(api, guildId, fresh, ids, persist, log, categoryKeys);
   }
@@ -98,7 +96,7 @@ main().catch(async e => {
   // Never print raw REST errors: request data may include sensitive headers.
   const error = e as Json;
   const safe = { error: error.name ?? 'Error', code: error.code ?? null,
-    detail: error.name === 'Error' ? String(error.message).replaceAll(process.env.DISCORD_TOKEN ?? '\0', '[REDACTED]') : 'Falha na API. Consulte o código e as permissões do bot.' };
+    detail: e instanceof UpdateError ? e.publicMessage : error.name === 'Error' ? String(error.message).replaceAll(process.env.DISCORD_TOKEN ?? '\0', '[REDACTED]') : 'Falha na API. Consulte o código e as permissões do bot.' };
   console.error(JSON.stringify(safe));
   await mkdir('reports', { recursive: true });
   await writeFile('reports/failure.json', JSON.stringify({ ...safe, operations: logs, complete: false }, null, 2), { mode: 0o600 });

@@ -9,6 +9,10 @@
   "scripts": {
     "check": "tsc --noEmit",
     "test": "tsx --test test/*.test.ts",
+    "build": "tsc --project tsconfig.build.json",
+    "start": "tsx src/bot.ts",
+    "start:prod": "node dist/bot.js",
+    "commands:register": "tsx src/register-commands.ts",
     "setup:dry-run": "tsx src/setup.ts --dry-run",
     "setup:apply": "tsx src/setup.ts --apply",
     "setup:verify": "tsx src/setup.ts --verify",

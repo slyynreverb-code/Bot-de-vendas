@@ -1,6 +1,8 @@
-# Destny Store — Etapa 1 / V16
+# KAMUI — configurador do servidor e comando administrativo
 
-Configuração modular do servidor com o mesmo bot já criado. Somente estrutura: 22 categorias, 50 canais, 26 cargos, permissões e opções nativas. Não registra comandos, não publica mensagens, não cria imagens, webhooks ou funcionalidades comerciais. A configuração é executada pelo terminal usando REST oficial e encerra ao terminar; não precisa manter o bot conectado nesta etapa.
+Projeto modular com o mesmo aplicativo e token do bot já criado. O planejamento existente contém 22 categorias, 50 canais permanentes e 26 cargos. O configurador pelo terminal continua disponível e encerra ao terminar. O novo módulo `/servidor atualizar` mantém o bot conectado para apresentar uma prévia privada e aplicar o lote de categorias aprovado, após confirmação no Discord.
+
+Não implementa vendas, pagamentos, carrinho ou automação de tickets. O comando administrativo preserva o nome atual do servidor e as configurações fora do lote. As instruções de ativação estão em [Comando de atualização no Discord](#comando-de-atualização-no-discord) e no [guia completo](docs/discord-update.md).
 
 ## Preparação no Codespace
 
@@ -34,7 +36,7 @@ Nas configurações do servidor Discord, o cargo técnico do bot precisa ter Adm
 npm run setup:apply
 ~~~
 
-Digite APLICAR seguido de um espaço e do ID exato do servidor quando solicitado. Não há opção para ignorar a confirmação nem comando publicado no Discord. Somente operadores com acesso autorizado ao Codespace/token devem executar.
+Digite APLICAR seguido de um espaço e do ID exato do servidor quando solicitado. Esta aplicação pelo terminal exige a confirmação interativa. O comando no Discord possui sua própria prévia e confirmação, descritas no final deste documento. Somente operadores com acesso autorizado ao Codespace/token devem executar o configurador.
 
 A execução faz chamadas sequenciais, respeitando o gerenciamento de rate limits do discord.js REST. Identidades são persistidas em .state/ID.json a cada criação. Preserve essa pasta entre execuções (ela fica fora do Git) para reconhecer elementos renomeados sem duplicação. Nomes repetidos em categorias diferentes são distinguidos pelo pai. Interrupções podem deixar configuração parcial; execute novamente após resolver o erro. Não há rollback destrutivo.
 
@@ -69,6 +71,9 @@ src/config/destny-store.config.ts contém todos os dados V16, incluindo referên
 src/modules/server-setup/policy.ts concentra permissões.
 src/modules/server-setup/engine.ts identifica, simula, aplica e valida.
 src/setup.ts faz autenticação, confirmação, persistência e relatórios.
+src/bot.ts mantém a conexão do bot e recebe interações.
+src/register-commands.ts registra o comando administrativo no servidor configurado.
+src/modules/discord-update concentra autorização, prévias e aplicação do lote pelo Discord.
 
 Módulos futuros poderão usar o mesmo aplicativo e token, sem alterar a identidade do bot. Nenhum módulo comercial antecipado foi criado.
 
@@ -116,3 +121,28 @@ A categoria antiga `🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦`, suas permissões e o
 Total atual planejado: **22 categorias, 50 canais permanentes e 26 cargos**. Os canais criados pelo Ticket King são dinâmicos e não entram nessa contagem permanente.
 
 O lote exige os cargos da equipe e as categorias Loja/Atendimento existentes. Outras adições ainda ausentes ficam pendentes de uma execução completa; não bloqueiam este lote e não são criadas por ele. A ordenação e a validação do lote consideram as categorias efetivamente presentes, mantendo Monitoramento no fim da sequência planejada. `setup:apply` continua sendo uma reaplicação completa, incluindo nome e configurações gerais.
+
+## Comando de atualização no Discord
+
+O comando `/servidor atualizar` usa exclusivamente o lote definido em `config.categoryBatch`. Nesta versão, o lote continua sendo **Compras, Serviços e Suporte**. Os três novos canais de Combos e a ordem Robux → Combos → Contas ainda dependem da autorização solicitada pelo usuário; não foram adicionados nesta implementação.
+
+Pode usar o comando quem for o dono real do servidor, tiver o cargo Owner identificado pelo ID aprovado ou possuir a permissão nativa **Administrator**. O ID de Owner vem de `DISCORD_OWNER_ROLE_ID`, quando configurado, ou de `role-1` no arquivo `.state/ID_DO_SERVIDOR.json`. Nomes de cargos não concedem autorização. O comando confere o acesso novamente ao clicar em Aplicar.
+
+Para ativar no Codespace, com os secrets `DISCORD_TOKEN` e `DISCORD_GUILD_ID` já disponíveis:
+
+~~~bash
+nvm use 24
+npm install
+npm run check
+npm test
+npm run commands:register
+npm start
+~~~
+
+O registro cria ou atualiza somente o comando `servidor`; preserva outros comandos do aplicativo. Ele não aplica mudanças na estrutura. Use `/servidor atualizar` no servidor configurado, revise a prévia privada e clique em **Aplicar** ou **Cancelar**. A confirmação vale por cinco minutos e pertence à pessoa que solicitou a prévia. Mudanças no plano ou reinício do bot exigem uma nova prévia.
+
+O comando fica disponível por padrão para administradores. Se um cargo Owner não tiver Administrator, libere esse cargo também em **Configurações do servidor → Integrações → aplicativo do bot → comando servidor**. A autorização por ID continua obrigatória dentro do bot. A aplicação deve ter os escopos `bot` e `applications.commands`; o runtime usa apenas o intent Guilds, sem intents privilegiados.
+
+O bot precisa permanecer online para responder. Codespaces serve para testar, mas pode pausar. Para manter disponibilidade, execute uma única instância em uma hospedagem com processo contínuo e preserve `.state/` entre reinícios e publicações. Há um [guia de produção com Docker](docs/discord-update.md#execução-em-produção).
+
+O comando aplica a configuração carregada no processo. Novas alterações do GitHub precisam ser implantadas e o bot reiniciado antes de aparecerem na prévia; ele não executa Git, comandos de terminal ou código enviado pelo Discord. Hospedagem permanente e atualização automática da plataforma não são provisionadas por esta implementação.
