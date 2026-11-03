@@ -164,3 +164,11 @@ O comando fica disponível por padrão para administradores. Se um cargo Owner n
 O bot precisa permanecer online para responder. Codespaces serve para testar, mas pode pausar. Para manter disponibilidade, execute uma única instância em uma hospedagem com processo contínuo e preserve `.state/` entre reinícios e publicações. Há um [guia de produção com Docker](docs/discord-update.md#execução-em-produção).
 
 O comando aplica a configuração carregada no processo. Novas alterações do GitHub precisam ser implantadas e o bot reiniciado antes de aparecerem na prévia; ele não executa Git, comandos de terminal ou código enviado pelo Discord. Hospedagem permanente e atualização automática da plataforma não são provisionadas por esta implementação.
+
+## Configuração remota: próximas alterações sem terminal
+
+O comando Discord consulta [server-update.json](server-update.json) nesta branch a cada prévia e confirmação. Após instalar esta versão uma vez, basta publicar as mudanças aprovadas nesse arquivo e executar `/servidor atualizar`; não é preciso reiniciar o bot para alterações de categorias, canais e ordem. O bot deve continuar online.
+
+O esquema permite apenas categorias/canais e o lote a aplicar; não executa código remoto. Arquivo inválido, servidor diferente ou falha no GitHub bloqueiam a operação. Mudança de revisão invalida confirmações anteriores. Preserve as chaves dos elementos existentes. O token Discord nunca é enviado ao GitHub.
+
+O CLI legado usa a configuração TypeScript local. Novas funcionalidades do programa ainda exigem deploy. Veja o [guia de configuração remota](docs/discord-update.md#atualização-remota-de-categorias-e-canais).

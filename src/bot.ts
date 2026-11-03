@@ -6,7 +6,7 @@ import { createAuthorizer } from './modules/discord-update/access.js';
 import { createUpdateController } from './modules/discord-update/controller.js';
 import { readBotEnvironment } from './modules/discord-update/environment.js';
 import { safeErrorCode } from './modules/discord-update/messages.js';
-import { ServerUpdateService } from './modules/discord-update/service.js';
+import { RemoteUpdateService } from './modules/discord-update/remote.js';
 
 export async function startBot(): Promise<Client> {
   const env = readBotEnvironment();
@@ -16,7 +16,7 @@ export async function startBot(): Promise<Client> {
     post: (path, body) => rest.post(path as `/${string}`, { body, reason: 'KAMUI: lote aprovado por /servidor atualizar' }),
     patch: (path, body) => rest.patch(path as `/${string}`, { body, reason: 'KAMUI: lote aprovado por /servidor atualizar' }),
   };
-  const service = new ServerUpdateService(api, env.guildId, { stateDir: env.stateDir, reportsDir: env.reportsDir });
+  const service = new RemoteUpdateService(api, env.guildId, { stateDir: env.stateDir, reportsDir: env.reportsDir });
   const authorize = createAuthorizer(api, env.guildId, {
     ownerRoleId: env.ownerRoleId, readState: () => readState(env.guildId, env.stateDir),
   });

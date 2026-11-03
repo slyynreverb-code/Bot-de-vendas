@@ -416,3 +416,25 @@ test('mudança somente na posição de um canal do lote é contabilizada como at
     config.categoryBatch.splice(0, config.categoryBatch.length, ...previousScope);
   }
 });
+
+test('nova revisão remota invalida uma confirmação mesmo sem alterar o delta visível', async t => {
+  const env = await environment(t, 'children');
+  const old = new ServerUpdateService(env.api, guildId, {...env.options, configurationRevision:'revision-one'});
+  const fresh = new ServerUpdateService(env.api, guildId, {...env.options, configurationRevision:'revision-two'});
+  const plan = await old.preview();
+  await assert.rejects(fresh.apply(plan.fingerprint, actorId), {code:'PLAN_CHANGED'});
+  assert.deepEqual(env.mutations(), []);
+});
+
+test('configuração recebida permite prever canal novo sem reiniciar o código local', async t => {
+  const {withConfiguration}=await import('../src/config/runtime-config.js');
+  const env=await environment(t);
+  const remote=structuredClone(config);
+  remote.categories.find(category=>category.key==='category-combos')!.channels.push({
+    key:'channel-future-live',name:'「✨」novidade-remota',type:0,position:3,
+  });
+  const plan=await withConfiguration(remote,()=>env.service.preview());
+  assert.ok(plan.actions.some(action=>action.operation==='criar'&&action.label==='「✨」novidade-remota'));
+  assert.equal(config.categories.find(category=>category.key==='category-combos')!.channels.length,3);
+  assert.deepEqual(env.mutations(),[]);
+});

@@ -1,4 +1,4 @@
-import { config } from '../../config/destny-store.config.js';
+import { activeConfig as config } from '../../config/runtime-config.js';
 import { access, bits, delta, equal, overwrites, type Json } from './policy.js';
 
 export interface Transport {

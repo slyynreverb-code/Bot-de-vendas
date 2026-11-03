@@ -1,6 +1,6 @@
 # Atualização do servidor pelo Discord
 
-O comando `/servidor atualizar` reaproveita o configurador de categorias do projeto. Ele consulta a estrutura, apresenta uma prévia privada e aguarda a confirmação de quem abriu essa prévia. Só então aplica o lote aprovado em `config.categoryBatch`.
+O comando `/servidor atualizar` reaproveita o configurador de categorias do projeto. Ele consulta a estrutura, apresenta uma prévia privada e aguarda a confirmação de quem abriu essa prévia. Só então aplica o lote aprovado em `server-update.json`, consultado no GitHub a cada prévia e confirmação.
 
 O lote atual contém somente **Combos** (`config.categoryBatch = ['category-combos']`) e prepara estes três canais de texto:
 
@@ -149,10 +149,14 @@ A aplicação no Discord e a aplicação pelo terminal compartilham a trava `.st
 
 Após uma interrupção abrupta, uma trava pode permanecer. Primeiro confirme que nenhuma aplicação continua executando; só depois revise a trava manualmente. A recuperação nunca deve apagar o arquivo `.state/ID_DO_SERVIDOR.json`, pois ele preserva as identidades dos canais e cargos.
 
-## Como publicar novas alterações
+## Atualização remota de categorias e canais
 
-O comando usa a configuração que estava no código quando o bot iniciou. Ele não baixa commits, executa shell ou transforma mensagens do Discord em código.
+Depois de instalar esta versão uma vez (`git pull --ff-only` e `npm start`), mudanças de estrutura não exigem novo pull ou reinício. O bot consulta `server-update.json` da branch `destny/estrutura-v16` deste repositório ao executar `/servidor atualizar` e novamente ao confirmar.
 
-Para disponibilizar uma alteração aprovada, atualize o projeto no GitHub, publique a nova versão na hospedagem e reinicie o bot. Depois execute `/servidor atualizar` e confira a nova prévia. Uma plataforma com deploy automático pode cuidar da publicação ao receber o commit; nenhuma integração de hospedagem é configurada automaticamente por este projeto.
+Fluxo: solicite a alteração, publique o JSON revisado no GitHub, execute o comando no Discord e confirme a prévia. O arquivo contém schemaVersion, guildId, categories e categoryBatch. Mantenha as chaves existentes para preservar os IDs. O lote deve selecionar somente as categorias que realmente terão canais/configurações alterados; a ordem das categorias existentes também aparece na prévia. Não há exclusão automática.
 
-Use o comando administrativo para o lote de categorias. `npm run setup:apply` continua sendo a aplicação completa do planejamento original e pode reaplicar o nome e as configurações gerais definidos no V16.
+O bot valida esquema, servidor, identidades únicas, tipos de canal, permissões e limites antes de usar o arquivo. Se GitHub estiver indisponível ou o arquivo for inválido, bloqueia a operação; não aplica uma cópia antiga silenciosamente. Se a revisão remota mudar após a prévia, exige nova confirmação. Configurações simultâneas ficam isoladas por interação.
+
+A origem remota é fixa neste repositório público, sem envio do token Discord ao GitHub. O arquivo não aceita código, tokens, cargos, nome do servidor ou AutoMod. Nunca coloque secrets nele. Atualizações do programa e novas funcionalidades ainda precisam de publicação/reinício; este fluxo automatiza categorias, canais e organização enquanto o bot estiver online. Codespaces suspenso continua deixando o bot offline.
+
+O configurador legado pelo terminal continua usando `src/config/destny-store.config.ts`; `/servidor atualizar` usa o JSON remoto. Para manter ambas as formas alinhadas, atualize também a configuração local ao publicar mudanças de estrutura.

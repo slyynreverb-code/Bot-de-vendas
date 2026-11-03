@@ -1,0 +1,612 @@
+{
+  "schemaVersion": 1,
+  "guildId": "1566968913449848984",
+  "categories": [
+    {
+      "key": "category-01",
+      "name": "🚪 • 𝗘𝗡𝗧𝗥𝗔𝗗𝗔",
+      "channels": [
+        {
+          "key": "channel-01-1",
+          "name": "「👋」ʙᴏᴀꜱ-ᴠɪɴᴅᴀꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-01-2",
+          "name": "「📜」ʀᴇɢʀᴀꜱ",
+          "type": 0,
+          "position": 1
+        }
+      ],
+      "position": 1,
+      "access": "read",
+      "staff": {
+        "admin": "inherit",
+        "moderator": "inherit",
+        "attendant": "inherit"
+      }
+    },
+    {
+      "key": "category-02",
+      "name": "📢 • 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗖𝗢𝗘𝗦",
+      "channels": [
+        {
+          "key": "channel-02-2",
+          "name": "「📣」ᴀɴᴜɴᴄɪᴏꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-02-3",
+          "name": "「🔗」ᴄᴏɴᴠɪᴛᴇꜱ",
+          "type": 0,
+          "position": 1
+        },
+        {
+          "key": "channel-02-4",
+          "name": "「📬」ɴᴏᴛɪꜰɪᴄᴀᴄᴏᴇꜱ",
+          "type": 0,
+          "position": 2
+        }
+      ],
+      "position": 2,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "inherit"
+      }
+    },
+    {
+      "key": "category-03",
+      "name": "🌙 • 𝗖𝗢𝗠𝗨𝗡𝗜𝗗𝗔𝗗𝗘",
+      "channels": [
+        {
+          "key": "channel-03-1",
+          "name": "「💭」ᴄʜᴀᴛ",
+          "type": 0,
+          "position": 0,
+          "rate_limit_per_user": 5
+        },
+        {
+          "key": "channel-03-2",
+          "name": "「📸」ᴍɪᴅɪᴀ",
+          "type": 0,
+          "position": 1,
+          "rate_limit_per_user": 0
+        },
+        {
+          "key": "channel-03-3",
+          "name": "「🎉」ꜱᴏʀᴛᴇɪᴏꜱ",
+          "type": 0,
+          "position": 2
+        },
+        {
+          "key": "channel-03-4",
+          "name": "「💡」ꜱᴜɢᴇꜱᴛᴏᴇꜱ",
+          "type": 0,
+          "position": 3,
+          "rate_limit_per_user": 15
+        },
+        {
+          "key": "channel-03-5",
+          "name": "「🗳️」ᴇɴQᴜᴇᴛᴇꜱ",
+          "type": 0,
+          "position": 4,
+          "rate_limit_per_user": 0,
+          "polls": true
+        },
+        {
+          "key": "channel-03-6",
+          "name": "「🔊」ɢᴇʀᴀʟ",
+          "type": 2,
+          "position": 5,
+          "bitrate": 64000,
+          "user_limit": 0,
+          "rtc_region": null
+        }
+      ],
+      "position": 3,
+      "access": "publish",
+      "staff": {
+        "admin": "publish",
+        "moderator": "publish",
+        "attendant": "inherit"
+      }
+    },
+    {
+      "key": "category-04",
+      "name": "🛒 • 𝗟𝗢𝗝𝗔",
+      "channels": [
+        {
+          "key": "channel-02-1",
+          "name": "「🔔」ᴀᴛᴜᴀʟɪᴢᴀᴄᴏᴇꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-04-1",
+          "name": "「📋」ᴄᴀᴛᴀʟᴏɢᴏ",
+          "type": 0,
+          "position": 1
+        },
+        {
+          "key": "channel-04-2",
+          "name": "「📖」ᴄᴏᴍᴏ-ᴄᴏᴍᴘʀᴀʀ",
+          "type": 0,
+          "position": 2
+        },
+        {
+          "key": "channel-04-3",
+          "name": "「📑」ᴛᴇʀᴍᴏꜱ-ᴅᴀ-ʟᴏᴊᴀ",
+          "type": 0,
+          "position": 3
+        },
+        {
+          "key": "channel-04-4",
+          "name": "「🎁」ᴘʀᴏᴍᴏᴄᴏᴇꜱ",
+          "type": 0,
+          "position": 4
+        },
+        {
+          "key": "channel-04-5",
+          "name": "「🏅」ʙᴇɴᴇꜰɪᴄɪᴏꜱ",
+          "type": 0,
+          "position": 5
+        }
+      ],
+      "position": 4,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-05",
+      "name": "🎫 • 𝗔𝗧𝗘𝗡𝗗𝗜𝗠𝗘𝗡𝗧𝗢",
+      "channels": [
+        {
+          "key": "channel-05-1",
+          "name": "「📩」ᴀʙʀɪʀ-ᴛɪᴄᴋᴇᴛ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-05-2",
+          "name": "「❓」ᴅᴜᴠɪᴅᴀꜱ-ꜰʀᴇQᴜᴇɴᴛᴇꜱ",
+          "type": 0,
+          "position": 1
+        }
+      ],
+      "position": 5,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "publish",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-ticket-purchases",
+      "name": "💳 • 𝗖𝗢𝗠𝗣𝗥𝗔𝗦",
+      "channels": [],
+      "position": 6,
+      "access": "hidden",
+      "staff": {
+        "admin": "publish",
+        "moderator": "publish",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-ticket-services",
+      "name": "📝 • 𝗦𝗘𝗥𝗩𝗜𝗖𝗢𝗦",
+      "channels": [],
+      "position": 7,
+      "access": "hidden",
+      "staff": {
+        "admin": "publish",
+        "moderator": "publish",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-ticket-support",
+      "name": "🛠️ • 𝗦𝗨𝗣𝗢𝗥𝗧𝗘",
+      "channels": [],
+      "position": 8,
+      "access": "hidden",
+      "staff": {
+        "admin": "publish",
+        "moderator": "publish",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-tickets",
+      "name": "🎫 • 𝗧𝗜𝗖𝗞𝗘𝗧𝗦",
+      "channels": [],
+      "position": 9,
+      "access": "hidden",
+      "staff": {
+        "admin": "publish",
+        "moderator": "publish",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-06",
+      "name": "✅ • 𝗔𝗩𝗔𝗟𝗜𝗔𝗖𝗢𝗘𝗦",
+      "channels": [
+        {
+          "key": "channel-06-1",
+          "name": "「💬」ꜰᴇᴇᴅʙᴀᴄᴋꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-06-2",
+          "name": "「📦」ᴇɴᴛʀᴇɢᴀꜱ",
+          "type": 0,
+          "position": 1
+        }
+      ],
+      "position": 10,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-robux",
+      "name": "💸 • 𝗥𝗢𝗕𝗨𝗫",
+      "channels": [
+        {
+          "key": "channel-robux-gamepass",
+          "name": "「🎮」ɢᴀᴍᴇᴘᴀꜱꜱ",
+          "type": 0,
+          "position": 0
+        }
+      ],
+      "position": 11,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-combos",
+      "name": "🔥 • 𝗖𝗢𝗠𝗕𝗢𝗦",
+      "channels": [
+        {
+          "key": "channel-combos-evolution",
+          "name": "「📈」ᴇᴠᴏʟᴜᴄᴀᴏ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-combos-equipment",
+          "name": "「⚔️」ᴇqᴜɪᴘᴀᴍᴇɴᴛᴏꜱ",
+          "type": 0,
+          "position": 1
+        },
+        {
+          "key": "channel-combos-farm",
+          "name": "「👹」ꜰᴀʀᴍ",
+          "type": 0,
+          "position": 2
+        }
+      ],
+      "position": 12,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-07",
+      "name": "👤 • 𝗖𝗢𝗡𝗧𝗔𝗦",
+      "channels": [
+        {
+          "key": "channel-07-1",
+          "name": "「🛒」ᴅɪꜱᴘᴏɴɪᴠᴇɪꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-07-2",
+          "name": "「🎨」ᴘᴇʀꜱᴏɴᴀʟɪᴢᴀᴠᴇɪꜱ",
+          "type": 0,
+          "position": 1
+        }
+      ],
+      "position": 13,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-08",
+      "name": "👹 • 𝗙𝗔𝗥𝗠",
+      "channels": [
+        {
+          "key": "channel-08-1",
+          "name": "「⚔️」ʙᴏꜱꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-08-2",
+          "name": "「❄️」ʏᴇᴛɪ",
+          "type": 0,
+          "position": 1
+        }
+      ],
+      "position": 14,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-09",
+      "name": "🗡️ • 𝗔𝗥𝗠𝗔𝗦",
+      "channels": [
+        {
+          "key": "channel-09-1",
+          "name": "「⚔️」ʙᴀꜱᴇ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-09-2",
+          "name": "「🔨」ᴅᴀᴍᴀꜱᴄᴜꜱ",
+          "type": 0,
+          "position": 1
+        },
+        {
+          "key": "channel-09-3",
+          "name": "「🌑」ɴɪɢʜᴛꜰᴀʟʟ",
+          "type": 0,
+          "position": 2
+        },
+        {
+          "key": "channel-09-4",
+          "name": "「🌅」ꜰɪʀꜱᴛʟɪɢʜᴛ",
+          "type": 0,
+          "position": 3
+        }
+      ],
+      "position": 15,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-10",
+      "name": "🎭 • 𝗔𝗖𝗘𝗦𝗦𝗢𝗥𝗜𝗢𝗦",
+      "channels": [
+        {
+          "key": "channel-10-1",
+          "name": "「🎭」ʙᴀꜱᴇ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-10-2",
+          "name": "「🌑」ɴɪɢʜᴛꜰᴀʟʟ",
+          "type": 0,
+          "position": 1
+        },
+        {
+          "key": "channel-10-3",
+          "name": "「🌅」ꜰɪʀꜱᴛʟɪɢʜᴛ",
+          "type": 0,
+          "position": 2
+        }
+      ],
+      "position": 16,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-11",
+      "name": "📈 • 𝗫𝗣",
+      "channels": [
+        {
+          "key": "channel-11-1",
+          "name": "「🥋」ᴍᴀᴇꜱᴛʀɪᴀ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-11-2",
+          "name": "「📊」ʟᴇᴠᴇʟ",
+          "type": 0,
+          "position": 1
+        }
+      ],
+      "position": 17,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-12",
+      "name": "💎 • 𝗠𝗔𝗧𝗘𝗥𝗜𝗔𝗜𝗦",
+      "channels": [
+        {
+          "key": "channel-12-1",
+          "name": "「💠」ᴏʀᴇꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-12-2",
+          "name": "「💰」ᴍᴏɴᴇʏ",
+          "type": 0,
+          "position": 1
+        },
+        {
+          "key": "channel-12-3",
+          "name": "「✨」ᴍɪᴛɪᴄᴏꜱ",
+          "type": 0,
+          "position": 2
+        },
+        {
+          "key": "channel-12-4",
+          "name": "「🔧」ʀᴇꜰɪɴᴇᴍᴇɴᴛ",
+          "type": 0,
+          "position": 3
+        }
+      ],
+      "position": 18,
+      "access": "read",
+      "staff": {
+        "admin": "publish",
+        "moderator": "inherit",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-archives",
+      "name": "🗂️ • 𝗔𝗥𝗤𝗨𝗜𝗩𝗢𝗦",
+      "channels": [
+        {
+          "key": "channel-archives-images",
+          "name": "「🖼️」ɪᴍᴀɢᴇɴꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-archives-text",
+          "name": "「📝」ᴛᴇxᴛᴏꜱ",
+          "type": 0,
+          "position": 1
+        }
+      ],
+      "position": 19,
+      "access": "hidden",
+      "ownerOnly": true,
+      "staff": {
+        "admin": "hidden",
+        "moderator": "hidden",
+        "attendant": "hidden"
+      }
+    },
+    {
+      "key": "category-13",
+      "name": "🔒 • 𝗘𝗤𝗨𝗜𝗣𝗘",
+      "channels": [
+        {
+          "key": "channel-13-1",
+          "name": "「📢」ᴀᴠɪꜱᴏꜱ-ꜱᴛᴀꜰꜰ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-13-2",
+          "name": "「💬」ᴄʜᴀᴛ-ꜱᴛᴀꜰꜰ",
+          "type": 0,
+          "position": 1
+        },
+        {
+          "key": "channel-13-3",
+          "name": "「📋」ᴘᴇᴅɪᴅᴏꜱ",
+          "type": 0,
+          "position": 2
+        },
+        {
+          "key": "channel-13-4",
+          "name": "「🤖」ᴄᴏᴍᴀɴᴅᴏꜱ",
+          "type": 0,
+          "position": 3
+        }
+      ],
+      "position": 20,
+      "access": "hidden",
+      "staff": {
+        "admin": "publish",
+        "moderator": "publish",
+        "attendant": "publish"
+      }
+    },
+    {
+      "key": "category-14",
+      "name": "📁 • 𝗥𝗘𝗚𝗜𝗦𝗧𝗥𝗢𝗦",
+      "channels": [
+        {
+          "key": "channel-14-1",
+          "name": "「🎫」ʟᴏɢꜱ-ᴛɪᴄᴋᴇᴛꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-14-2",
+          "name": "「🛡️」ʟᴏɢꜱ-ᴍᴏᴅᴇʀᴀᴄᴀᴏ",
+          "type": 0,
+          "position": 1
+        },
+        {
+          "key": "channel-14-3",
+          "name": "「📜」ʟᴏɢꜱ-ꜱᴇʀᴠɪᴅᴏʀ",
+          "type": 0,
+          "position": 2
+        }
+      ],
+      "position": 21,
+      "access": "hidden",
+      "staff": {
+        "admin": "publish",
+        "moderator": "read",
+        "attendant": "hidden"
+      }
+    },
+    {
+      "key": "category-15",
+      "name": "📡 • 𝗠𝗢𝗡𝗜𝗧𝗢𝗥𝗔𝗠𝗘𝗡𝗧𝗢",
+      "channels": [
+        {
+          "key": "channel-15-1",
+          "name": "「📈」ᴘʀᴏɢʀᴇꜱꜱᴏ-ᴅᴀꜱ-ᴄᴏɴᴛᴀꜱ",
+          "type": 0,
+          "position": 0
+        }
+      ],
+      "position": 22,
+      "access": "hidden",
+      "staff": {
+        "admin": "publish",
+        "moderator": "hidden",
+        "attendant": "read"
+      }
+    }
+  ],
+  "categoryBatch": [
+    "category-combos"
+  ]
+}

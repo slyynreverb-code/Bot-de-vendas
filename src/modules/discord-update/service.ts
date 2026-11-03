@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { config } from '../../config/destny-store.config.js';
+import { activeConfig as config } from '../../config/runtime-config.js';
 import { apply, inspect, preflight, preview, resolve, snapshot, type Snapshot, type Transport } from '../server-setup/engine.js';
 import { type Json, validateConfig } from '../server-setup/policy.js';
 import { persistState, readState, UpdateError, withGuildLock } from '../server-setup/storage.js';
@@ -23,6 +23,7 @@ export interface UpdateResult {
 export interface UpdateServiceOptions {
   stateDir?: string;
   reportsDir?: string;
+  configurationRevision?: string;
 }
 
 function canonical(value: unknown): string {
@@ -38,9 +39,11 @@ function canonical(value: unknown): string {
 export class ServerUpdateService {
   private readonly stateDir: string;
   private readonly reportsDir: string;
+  private readonly revision: string;
 
   constructor(private readonly api: Transport, private readonly guildId: string, options: UpdateServiceOptions = {}) {
     if (!/^\d{17,20}$/.test(guildId)) throw new UpdateError('INVALID_CONFIG', 'O ID do servidor está inválido.');
+    this.revision = options.configurationRevision ?? 'local';
     this.stateDir = options.stateDir ?? '.state';
     this.reportsDir = options.reportsDir ?? 'reports';
   }
@@ -89,7 +92,7 @@ export class ServerUpdateService {
       });
     }
     const fingerprint = createHash('sha256').update(canonical({
-      guildId: this.guildId, scope, actions, positions,
+      guildId: this.guildId, scope, actions, positions, revision: this.revision,
       // Bind identities too: replacing an entity with the same name must still
       // invalidate the old confirmation, even if the visible delta is equal.
       ids,

@@ -1,5 +1,5 @@
 import { PermissionFlagsBits as P } from 'discord.js';
-import { config } from '../../config/destny-store.config.js';
+import { activeConfig as config } from '../../config/runtime-config.js';
 
 export type Json = Record<string, any>;
 export function bits(names: string[]): string {
@@ -48,9 +48,8 @@ export function delta(current: Json, wanted: Json): Json {
 }
 export function validateConfig(): void {
   const channels = config.categories.flatMap(c => c.channels);
-  if (config.categories.length !== 22 || channels.length !== 52 || config.roles.length !== 26 ||
-      config.roles.filter(r => r.hoist).length !== 21 || config.fidelity.length !== 14 ||
-      channels.filter(c => c.type === 2).length !== 1) throw new Error('Contagens V16 inválidas.');
+  if (config.categories.length < 1 || config.categories.length > 50 || channels.length > 450 || config.roles.length !== 26 ||
+      config.roles.filter(r => r.hoist).length !== 21 || config.fidelity.length !== 14) throw new Error('Contagens V16 inválidas.');
   for (const group of [config.roles, config.categories, channels]) {
     if (new Set(group.map(x => x.key)).size !== group.length) throw new Error('Chaves duplicadas.');
   }
