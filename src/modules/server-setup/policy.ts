@@ -18,6 +18,11 @@ export function access(id: string, mode: string): Json {
 }
 export function overwrites(category: Json | undefined, ids: Record<string, string>, guildId: string, polls = false): Json[] {
   const result = [access(guildId, polls ? 'read' : category?.access ?? 'read')];
+  if (category?.ownerOnly) {
+    // Administrator and the actual server owner always bypass overwrites in Discord.
+    result.push(access(ids['role-1'], 'publish'));
+    return result;
+  }
   if (category) {
     for (const [name, key] of [['admin', 'role-3'], ['moderator', 'role-4'], ['attendant', 'role-5']]) {
       const mode = polls ? name === 'admin' ? 'publish' : 'read' : category.staff[name];
@@ -43,7 +48,7 @@ export function delta(current: Json, wanted: Json): Json {
 }
 export function validateConfig(): void {
   const channels = config.categories.flatMap(c => c.channels);
-  if (config.categories.length !== 15 || channels.length !== 46 || config.roles.length !== 26 ||
+  if (config.categories.length !== 16 || channels.length !== 48 || config.roles.length !== 26 ||
       config.roles.filter(r => r.hoist).length !== 21 || config.fidelity.length !== 14 ||
       channels.filter(c => c.type === 2).length !== 1) throw new Error('Contagens V16 inválidas.');
   for (const group of [config.roles, config.categories, channels]) {

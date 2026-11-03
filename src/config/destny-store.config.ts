@@ -614,6 +614,32 @@ export const config = {
       }
     },
     {
+      "key": "category-archives",
+      "name": "🗂️ • 𝗔𝗥𝗤𝗨𝗜𝗩𝗢𝗦",
+      "channels": [
+        {
+          "key": "channel-archives-images",
+          "name": "「🖼️」ɪᴍᴀɢᴇɴꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
+          "key": "channel-archives-text",
+          "name": "「📝」ᴛᴇxᴛᴏꜱ",
+          "type": 0,
+          "position": 1
+        }
+      ],
+      "position": 13,
+      "access": "hidden",
+      "ownerOnly": true,
+      "staff": {
+        "admin": "hidden",
+        "moderator": "hidden",
+        "attendant": "hidden"
+      }
+    },
+    {
       "key": "category-13",
       "name": "🔒 • 𝗘𝗤𝗨𝗜𝗣𝗘",
       "channels": [
@@ -642,7 +668,7 @@ export const config = {
           "position": 3
         }
       ],
-      "position": 13,
+      "position": 14,
       "access": "hidden",
       "staff": {
         "admin": "publish",
@@ -673,7 +699,7 @@ export const config = {
           "position": 2
         }
       ],
-      "position": 14,
+      "position": 15,
       "access": "hidden",
       "staff": {
         "admin": "publish",
@@ -692,7 +718,7 @@ export const config = {
           "position": 0
         }
       ],
-      "position": 15,
+      "position": 16,
       "access": "hidden",
       "staff": {
         "admin": "publish",

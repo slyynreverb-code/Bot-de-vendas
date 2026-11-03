@@ -1,6 +1,6 @@
 # Destny Store — Etapa 1 / V16
 
-Configuração modular do servidor com o mesmo bot já criado. Somente estrutura: 15 categorias, 47 canais, 26 cargos, permissões e opções nativas. Não registra comandos, não publica mensagens, não cria imagens, webhooks ou funcionalidades comerciais. A configuração é executada pelo terminal usando REST oficial e encerra ao terminar; não precisa manter o bot conectado nesta etapa.
+Configuração modular do servidor com o mesmo bot já criado. Somente estrutura: 16 categorias, 49 canais, 26 cargos, permissões e opções nativas. Não registra comandos, não publica mensagens, não cria imagens, webhooks ou funcionalidades comerciais. A configuração é executada pelo terminal usando REST oficial e encerra ao terminar; não precisa manter o bot conectado nesta etapa.
 
 ## Preparação no Codespace
 
@@ -73,3 +73,11 @@ src/setup.ts faz autenticação, confirmação, persistência e relatórios.
 Módulos futuros poderão usar o mesmo aplicativo e token, sem alterar a identidade do bot. Nenhum módulo comercial antecipado foi criado.
 
 Fonte de verdade: Destny_Store_Prompt_Mestre_V16.txt.
+
+## Alterações aprovadas após o V16
+
+- Atualizações foi movido para a primeira posição de Loja, com a chave de identidade preservada.
+- Arquivos foi adicionado antes de Equipe, com Imagens e Textos. As contagens atuais são 16 categorias, 49 canais e 26 cargos.
+- Arquivos nega visualização a @everyone e concede acesso explícito somente a Owner. Os dois canais recebem a mesma política.
+- Cofundador mantém Administrator, conforme o planejamento. Por limitação nativa do Discord, qualquer membro com Administrator (incluindo Cofundador e o bot) e o proprietário real podem ver Arquivos. Remover esse privilégio global exige uma decisão separada.
+- Os canais são criados vazios, sem enviar imagens ou textos. Links de anexos Discord podem expirar; não são uma hospedagem permanente.

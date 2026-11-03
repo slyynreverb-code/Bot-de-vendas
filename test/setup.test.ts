@@ -44,15 +44,15 @@ function allowed(overrides: Record<string, any>[], roleId: string, bit: bigint):
 }
 test('V16 quantidades, Unicode e restrições administrativas', () => {
   validateConfig();
-  assert.equal(config.categories.flatMap(c => c.channels).length + 1, 47);
+  assert.equal(config.categories.flatMap(c => c.channels).length + 1, 49);
   assert.equal(config.categories[2].channels[4].name, '「🗳️」ᴇɴQᴜᴇᴛᴇꜱ');
-  assert.equal(config.categories[14].channels.length, 1);
+  assert.equal(config.categories.find(c => c.key === 'category-15')!.channels.length, 1);
   assert.equal(config.roles[2].permissions.includes('Administrator'), false);
   assert.equal(config.roles[3].permissions.includes('BanMembers'), false);
 });
 test('Registros e Monitoramento aplicam políticas distintas', () => {
-  const records = overwrites(config.categories[13], ids, 'guild');
-  const monitoring = overwrites(config.categories[14], ids, 'guild');
+  const records = overwrites(config.categories.find(c => c.key === 'category-14')!, ids, 'guild');
+  const monitoring = overwrites(config.categories.find(c => c.key === 'category-15')!, ids, 'guild');
   assert.equal(allowed(records, ids['role-4'], P.ViewChannel), true);
   assert.equal(allowed(records, ids['role-4'], P.SendMessages), false);
   assert.equal(allowed(records, ids['role-5'], P.ViewChannel), false);
@@ -156,4 +156,20 @@ test('empate não autoriza cargo mais antigo que o maior cargo do bot', () => {
   s.roles.forEach(r => { if (r.id !== 'guild') r.position = 1; });
   s.channels = [];
   assert.throws(() => preflight(s, { ...ids, 'role-1': '100000000000000001' }), /cargo técnico/);
+});
+
+test('Arquivos fica antes de Equipe e concede acesso explícito apenas a Owner', () => {
+  const index = config.categories.findIndex(c => c.key === 'category-archives');
+  assert.equal(config.categories[index + 1].key, 'category-13');
+  assert.equal(config.categories.at(-1)!.key, 'category-15');
+  assert.equal(config.categories[index].channels.length, 2);
+  const ow = overwrites(config.categories[index], ids, 'guild');
+  for (const role of ['role-3', 'role-4', 'role-5', 'role-20']) {
+    assert.equal(allowed(ow, ids[role], P.ViewChannel), false);
+  }
+  assert.equal(allowed(ow, ids['role-1'], P.ViewChannel), true);
+  assert.equal(allowed(ow, ids['role-1'], P.SendMessages), true);
+  assert.deepEqual(ow.map(o => o.id).sort(), ['guild', ids['role-1']].sort());
+  // Cofundador still has Administrator: a channel overwrite cannot hide it from that role.
+  assert.ok(config.roles[1].permissions.includes('Administrator'));
 });
