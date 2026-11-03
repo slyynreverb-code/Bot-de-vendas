@@ -251,28 +251,22 @@ export const config = {
       "name": "📢 • 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗖𝗢𝗘𝗦",
       "channels": [
         {
-          "key": "channel-02-1",
-          "name": "「🔔」ᴀᴛᴜᴀʟɪᴢᴀᴄᴏᴇꜱ",
-          "type": 0,
-          "position": 0
-        },
-        {
           "key": "channel-02-2",
           "name": "「📣」ᴀɴᴜɴᴄɪᴏꜱ",
           "type": 0,
-          "position": 1
+          "position": 0
         },
         {
           "key": "channel-02-3",
           "name": "「🔗」ᴄᴏɴᴠɪᴛᴇꜱ",
           "type": 0,
-          "position": 2
+          "position": 1
         },
         {
           "key": "channel-02-4",
           "name": "「📬」ɴᴏᴛɪꜰɪᴄᴀᴄᴏᴇꜱ",
           "type": 0,
-          "position": 3
+          "position": 2
         }
       ],
       "position": 2,
@@ -345,34 +339,40 @@ export const config = {
       "name": "🛒 • 𝗟𝗢𝗝𝗔",
       "channels": [
         {
+          "key": "channel-02-1",
+          "name": "「🔔」ᴀᴛᴜᴀʟɪᴢᴀᴄᴏᴇꜱ",
+          "type": 0,
+          "position": 0
+        },
+        {
           "key": "channel-04-1",
           "name": "「📋」ᴄᴀᴛᴀʟᴏɢᴏ",
           "type": 0,
-          "position": 0
+          "position": 1
         },
         {
           "key": "channel-04-2",
           "name": "「📖」ᴄᴏᴍᴏ-ᴄᴏᴍᴘʀᴀʀ",
           "type": 0,
-          "position": 1
+          "position": 2
         },
         {
           "key": "channel-04-3",
           "name": "「📑」ᴛᴇʀᴍᴏꜱ-ᴅᴀ-ʟᴏᴊᴀ",
           "type": 0,
-          "position": 2
+          "position": 3
         },
         {
           "key": "channel-04-4",
           "name": "「🎁」ᴘʀᴏᴍᴏᴄᴏᴇꜱ",
           "type": 0,
-          "position": 3
+          "position": 4
         },
         {
           "key": "channel-04-5",
           "name": "「🏅」ʙᴇɴᴇꜰɪᴄɪᴏꜱ",
           "type": 0,
-          "position": 4
+          "position": 5
         }
       ],
       "position": 4,
