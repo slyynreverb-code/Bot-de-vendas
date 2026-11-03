@@ -6,7 +6,7 @@ import { access, bits, overwrites, validateConfig } from '../src/modules/server-
 import { apply, inspect, preview, resolve } from '../src/modules/server-setup/engine.js';
 
 import type { Snapshot, Transport } from '../src/modules/server-setup/engine.js';
-import { channelBody, guildBody, roleBody, ruleBodies, preflight } from '../src/modules/server-setup/engine.js';
+import { channelBody, guildBody, roleBody, ruleBodies, preflight, compareRoles, rolePositionPlan } from '../src/modules/server-setup/engine.js';
 
 const ids: Record<string, string> = {};
 for (const r of config.roles) ids[r.key] = r.key;
@@ -107,4 +107,43 @@ test('dry-run é puro e rerun não cria entidades nem escreve mensagens', async 
   };
   for (let i = 0; i < 2; i++) await apply(api, 'guild', s, { ...ids }, async () => {}, () => {});
   assert.deepEqual(calls, ['/guilds/guild/channels', '/guilds/guild/channels']);
+});
+
+test('posições brutas empatadas usam snowflake; bot mais antigo continua acima', () => {
+  const s = fixture();
+  const remapped: Record<string, string> = {};
+  const botId = '100000000000000001';
+  s.roles = [
+    { ...s.roles[0], id: '100000000000000000' },
+    { ...s.roles[1], id: botId, position: 1 },
+    ...config.roles.map((r, i) => {
+      const id = (100000000000000200n - BigInt(i)).toString();
+      remapped[r.key] = id;
+      return { id, ...roleBody(r), position: 1, managed: false };
+    }),
+  ];
+  // Reverse the API order: array order is not the hierarchy.
+  s.roles.reverse();
+  s.guild.id = '100000000000000000';
+  s.member.roles = [botId];
+  s.channels = [];
+  preflight(s, remapped);
+  assert.equal(compareRoles({ id: botId, position: 1 }, { id: remapped['role-1'], position: 1 }), 1);
+  const plan = rolePositionPlan(s.roles, s.member.roles, remapped, s.guild.id);
+  assert.equal(plan.length, 28);
+  assert.deepEqual(plan.find(r => r.id === botId), { id: botId, position: 27 });
+  assert.equal(plan.find(r => r.id === remapped['role-1'])!.position, 26);
+  assert.equal(plan.find(r => r.id === remapped['role-26'])!.position, 1);
+  const updated = s.roles.map(r => ({ ...r, position: plan.find(p => p.id === r.id)!.position }));
+  assert.deepEqual(rolePositionPlan(updated, s.member.roles, remapped, s.guild.id), []);
+  preflight({ ...s, roles: updated }, remapped);
+});
+test('empate não autoriza cargo mais antigo que o maior cargo do bot', () => {
+  const s = fixture();
+  s.roles.find(r => r.id === ids['role-1'])!.id = '100000000000000001';
+  s.roles.find(r => r.id === 'bot')!.id = '100000000000000002';
+  s.member.roles = ['100000000000000002'];
+  s.roles.forEach(r => { if (r.id !== 'guild') r.position = 1; });
+  s.channels = [];
+  assert.throws(() => preflight(s, { ...ids, 'role-1': '100000000000000001' }), /cargo técnico/);
 });

@@ -41,19 +41,44 @@ export function resolve(s: Snapshot, state: Record<string, string>): Record<stri
   }
   return ids;
 }
+// Discord resolves equal raw positions using snowflakes: the older role is higher.
+// Match RoleManager.comparePositions; never convert IDs to Number (precision loss).
+export function compareRoles(a: Json, b: Json): number {
+  if (a.position !== b.position) return a.position - b.position;
+  if (a.id === b.id) return 0;
+  return BigInt(a.id) < BigInt(b.id) ? 1 : -1;
+}
+export function rolePositionPlan(roles: Json[], memberRoleIds: string[], ids: Record<string, string>, guildId: string): Json[] {
+  const sorted = [...roles].sort(compareRoles);
+  const highest = sorted.filter(r => memberRoleIds.includes(r.id)).at(-1);
+  if (!highest) throw new Error('Cargo técnico do bot não encontrado na hierarquia.');
+  const managed = config.roles.map(r => roles.find(role => role.id === ids[r.key]));
+  if (managed.some(r => !r || r.managed || compareRoles(r, highest) >= 0))
+    throw new Error('Mova o cargo técnico do bot acima dos cargos da loja.');
+  const managedIds = new Set(managed.map(r => r!.id));
+  const retained = sorted.filter(r => !managedIds.has(r.id));
+  const insertion = retained.findIndex(r => r.id === highest.id);
+  // Preserve all external roles relative to each other and the bot; insert the V16 block below it.
+  const desired = [...retained.slice(0, insertion), ...(managed.slice().reverse() as Json[]), ...retained.slice(insertion)];
+  if (desired[0]?.id !== guildId) throw new Error('@everyone deve permanecer na base.');
+  if (desired.every((r, i) => r.id === sorted[i].id)) return [];
+  // Same complete-list normalization used by discord.js setPosition.
+  return desired.map((r, position) => ({ id: r.id, position }));
+}
+
 export function preflight(s: Snapshot, ids: Record<string, string>): void {
   if (!s.user.bot) throw new Error('Somente token de bot é permitido.');
   const memberRoles = s.roles.filter(r => s.member.roles.includes(r.id));
-  const highest = Math.max(0, ...memberRoles.map(r => r.position));
+  const highest = [...memberRoles].sort(compareRoles).at(-1);
   const mask = memberRoles.concat(s.roles.filter(r => r.id === s.guild.id))
     .reduce((m, r) => m | BigInt(r.permissions), 0n);
   // Administrator is required to grant Administrator to the two approved roles.
   if ((mask & BigInt(bits(['Administrator']))) === 0n)
     throw new Error('O bot precisa de Administrator para configurar os cargos Owner/Cofundador.');
-  if (highest < 1) throw new Error('Cargo técnico do bot não encontrado na hierarquia.');
+  if (!highest) throw new Error('Cargo técnico do bot não encontrado na hierarquia.');
   for (const r of config.roles) {
     const current = s.roles.find(x => x.id === ids[r.key]);
-    if (current && (current.managed || current.position >= highest))
+    if (current && (current.managed || compareRoles(current, highest) >= 0))
       throw new Error('Mova o cargo técnico do bot acima de ' + r.name + '. Cargos gerenciados não podem ser adotados.');
   }
   const approved = new Set([s.guild.id, ...Object.values(ids)]);
@@ -120,7 +145,7 @@ export function inspect(s: Snapshot, ids: Record<string, string>): string[] {
     { ...channelBody(config.status, undefined, ids, s.guild.id), position: 0 });
   check('Servidor', s.guild, guildBody(s, ids));
   const ordered = config.roles.map(r => s.roles.find(x => x.id === ids[r.key]));
-  if (ordered.some((r, i) => !r || i > 0 && ordered[i - 1]!.position <= r.position)) issues.push('Hierarquia dos cargos divergente.');
+  if (ordered.some((r, i) => !r || i > 0 && compareRoles(ordered[i - 1]!, r) <= 0)) issues.push('Hierarquia dos cargos divergente.');
   for (const body of ruleBodies(ids)) {
     const rules = s.rules.filter(r => r.name === body.name);
     if (rules.length !== 1 || rules[0].trigger_type !== body.trigger_type || Object.keys(ruleDelta(rules[0], body)).length)
@@ -180,14 +205,19 @@ export async function apply(api: Transport, guildId: string, s: Snapshot, ids: R
   const everyone = s.roles.find(r => r.id === guildId)!;
   const changes = delta(everyone, { permissions: bits(config.everyone) });
   if (Object.keys(changes).length) await api.patch(base + '/roles/' + guildId, changes);
-  // Re-fetch positions after creations. Reserve slots immediately below the bot.
+  // Re-fetch after creations; raw positions may all be 1.
   const currentRoles = await api.get(base + '/roles') as Json[];
-  const botRoles = currentRoles.filter(r => s.member.roles.includes(r.id));
-  const botTop = Math.max(...botRoles.map(r => r.position));
-  const positions = config.roles.map((r, i) => ({ id: ids[r.key], position: botTop - 1 - i }));
-  if (positions.some(p => p.position < 1)) throw new Error('Hierarquia insuficiente: mova o cargo do bot ao topo e execute novamente.');
-  if (positions.some(p => currentRoles.find(r => r.id === p.id)?.position !== p.position))
+  const positions = rolePositionPlan(currentRoles, s.member.roles, ids, guildId);
+  if (positions.length) {
     await api.patch(base + '/roles', positions);
+    const actual = await api.get(base + '/roles') as Json[];
+    const ordered = config.roles.map(r => actual.find(role => role.id === ids[r.key]));
+    if (ordered.some((r, i) => !r || i > 0 && compareRoles(ordered[i - 1]!, r) <= 0))
+      throw new Error('Discord não confirmou a ordem dos cargos; nenhuma categoria foi criada nesta tentativa.');
+    // Confirm the bot remains above the planned block too.
+    rolePositionPlan(actual, s.member.roles, ids, guildId);
+    log({ updated: 'Hierarquia dos cargos', tiedPositionsSupported: true });
+  }
   for (const c of config.categories) await upsert(c.key, c.name, base + '/channels', '/channels/', s.channels,
     { name: c.name, type: 4, permission_overwrites: overwrites(c, ids, guildId) });
   await upsert('status', config.status.name, base + '/channels', '/channels/', s.channels,
